@@ -20,6 +20,8 @@ mingw32-make run        # ejecuta desde la raíz del proyecto
 mingw32-make test-todo  # 63 pruebas plunit + 17 de integración C <-> Prolog
 ```
 
+En Windows también se puede abrir con **doble clic en `ejecutar.bat`**. Agrega SWI-Prolog al PATH, compila si hace falta y abre el programa, aunque la terminal no tenga el PATH actualizado.
+
 Para probarlo, use el carné `111110004` (el ejemplo del enunciado) o escriba `?` cuando se pida un carné para ver los estudiantes de prueba.
 
 ## Estructura

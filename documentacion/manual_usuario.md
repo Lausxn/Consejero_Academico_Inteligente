@@ -66,6 +66,8 @@ Desde la **carpeta raíz del proyecto** (la que contiene el `Makefile`):
 | `mingw32-make prolog` | abre el back-end en `swipl`, para hacer consultas a mano |
 | `mingw32-make clean` | borra la carpeta `build/` |
 
+**Forma más simple en Windows:** haga doble clic en **`ejecutar.bat`**, en la raíz del proyecto. El lanzador se ubica en la carpeta correcta, agrega `C:\Program Files\swipl\bin` (y GCC de WinLibs, si existe) al PATH de esa ventana, compila si hace falta y abre el programa. Sirve aunque la terminal tenga un PATH viejo.
+
 > **Ejecute siempre desde la raíz del proyecto** (por ejemplo, con `mingw32-make run`). El programa carga `backend/main.pl` y `datos/registros.txt` con rutas relativas.
 
 ---
