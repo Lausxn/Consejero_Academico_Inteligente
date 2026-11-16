@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % reglas.pl - Reglas base del dominio
 %
 % Responsabilidad: deducir hechos "de primer nivel" a partir de los datos:

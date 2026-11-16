@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % explicaciones.pl - El "por que" de cada conclusion
 %
 % Responsabilidad: convertir en texto las conclusiones de reglas.pl e

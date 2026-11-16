@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % hechos.pl - Plan de estudios OFICIAL
 % Ingenieria en Sistemas de Informacion, UNA (P.UNA-2498-21).
 % Bachillerato con salida lateral de Diplomado en Programacion de

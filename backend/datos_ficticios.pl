@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % datos_ficticios.pl - Datos que el plan oficial NO trae
 %
 % *** TODO LO DE ESTE ARCHIVO ES FICTICIO (inventado por el equipo) ***

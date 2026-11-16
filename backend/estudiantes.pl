@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % estudiantes.pl - Estudiantes y cursos aprobados (hechos dinamicos)
 %
 % Responsabilidad: almacenar estudiante/2 y aprobado/2 en memoria

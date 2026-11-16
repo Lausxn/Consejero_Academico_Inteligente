@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % inferencia.pl - Reglas recursivas y compuestas
 %
 % Responsabilidad: conclusiones que combinan varias reglas base:

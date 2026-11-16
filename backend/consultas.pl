@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % consultas.pl - UNICA API que llama el front-end en C
 %
 % Responsabilidad: un predicado consulta_<caso> por caso de uso del menu.

@@ -1,3 +1,4 @@
+:- encoding(utf8).
 /*  pruebas_prolog.pl - Pruebas automaticas del back-end (plunit)
 
     Ejecutar desde la raiz del proyecto:

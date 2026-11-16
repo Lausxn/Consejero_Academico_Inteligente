@@ -1,3 +1,4 @@
+:- encoding(utf8).
 /*  main.pl - Punto de carga del back-end (Consejero Academico Inteligente)
 
     Carga todos los modulos en el orden de dependencias:
