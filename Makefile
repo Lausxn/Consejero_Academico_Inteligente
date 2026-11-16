@@ -1,44 +1,62 @@
-# Makefile - proyecto C + Prolog (Windows / MinGW-w64)
-# Uso: mingw32-make [all|run|debug|prolog|test|clean]
+# Makefile - Consejero Academico Inteligente (front-end C + back-end SWI-Prolog)
+#
+# Uso (desde la raiz del proyecto):
+#   Windows: mingw32-make [all|run|prolog|test|clean]
+#   Linux:   make         [all|run|prolog|test|clean]
+#
+# Nota: en Windows no se usa swipl-ld porque arma el comando de gcc sin
+# comillas alrededor de "C:/Program Files/swipl" y falla. Se usa gcc con
+# las mismas rutas que reporta `swipl --dump-runtime-variables`
+# (alternativa permitida por el enunciado).
 
-CC      = gcc
-CFLAGS  = -std=c11 -Wall -Wextra -g -Iinclude
-LDFLAGS =
-SRC     = $(wildcard src/*.c)
-OBJ     = $(patsubst src/%.c,build/%.o,$(SRC))
-BIN     = build/app.exe
+CC       = gcc
+CFLAGS   = -std=c11 -Wall -Wextra -g -Ifrontend -Iintegracion
+BUILD    = build
+BIN      = $(BUILD)/consejero.exe
+SRC      = $(wildcard frontend/*.c) $(wildcard integracion/*.c)
+OBJ      = $(patsubst %.c,$(BUILD)/%.o,$(notdir $(SRC)))
 
-# Para embeber/llamar Prolog desde C:  mingw32-make SWI=1
-ifeq ($(SWI),1)
-SWI_HOME = C:/Program Files/swipl
-CFLAGS  += -I"$(SWI_HOME)/include"
-LDFLAGS += -L"$(SWI_HOME)/lib" -L"$(SWI_HOME)/bin" -lswipl
+vpath %.c frontend integracion
+
+ifeq ($(OS),Windows_NT)
+  # PLBASE y PLLIBDIR de `swipl --dump-runtime-variables`
+  SWI_HOME ?= C:/Program Files/swipl
+  CFLAGS   += -I"$(SWI_HOME)/include"
+  LDLIBS    = -L"$(SWI_HOME)/bin" -lswipl
+  MKDIR     = if not exist $(BUILD) mkdir $(BUILD)
+  RMDIR     = if exist $(BUILD) rmdir /s /q $(BUILD)
+  EJECUTAR  = $(subst /,\,$(BIN))
+else
+  BIN       = $(BUILD)/consejero
+  CFLAGS   += $(shell pkg-config --cflags swipl)
+  LDLIBS    = $(shell pkg-config --libs swipl)
+  MKDIR     = mkdir -p $(BUILD)
+  RMDIR     = rm -rf $(BUILD)
+  EJECUTAR  = ./$(BIN)
 endif
 
 all: $(BIN)
 
 $(BIN): $(OBJ)
-	$(CC) $(OBJ) -o $@ $(LDFLAGS)
+	$(CC) $(OBJ) -o $@ $(LDLIBS)
 
-build/%.o: src/%.c | build
+$(BUILD)/%.o: %.c | $(BUILD)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build:
-	@if not exist build mkdir build
+$(BUILD):
+	@$(MKDIR)
 
+# Se ejecuta desde la raiz para que encuentre backend/ y datos/
 run: $(BIN)
-	./$(BIN)
-
-debug: $(BIN)
-	gdb ./$(BIN)
+	$(EJECUTAR)
 
 prolog:
-	swipl prolog/main.pl
+	swipl backend/main.pl
 
 test:
-	swipl -g run_tests -t halt tests/test_main.pl
+	swipl -g run_tests -t halt pruebas/pruebas_prolog.pl
 
 clean:
-	@if exist build rmdir /s /q build
+	@$(RMDIR)
 
-.PHONY: all run debug prolog test clean
+.PHONY: all run prolog test clean

@@ -5,7 +5,7 @@
       "name": "Depurar C (gdb)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/app.exe",
+      "program": "${workspaceFolder}/build/consejero.exe",
       "cwd": "${workspaceFolder}",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb.exe",
