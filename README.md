@@ -17,7 +17,7 @@ Requisitos: SWI-Prolog 9 o superior, con su carpeta `bin` en el `PATH` (en tiemp
 ```sh
 mingw32-make            # compila build/consejero.exe        (Linux: make)
 mingw32-make run        # ejecuta desde la raíz del proyecto
-mingw32-make test-todo  # 60 pruebas plunit + 17 de integración C <-> Prolog
+mingw32-make test-todo  # 63 pruebas plunit + 17 de integración C <-> Prolog
 ```
 
 Para probarlo, use el carné `111110004` (el ejemplo del enunciado) o escriba `?` cuando se pida un carné para ver los estudiantes de prueba.
@@ -42,4 +42,4 @@ documentacion/  diseño, manuales y guía de defensa
 | [`documentacion/manual_tecnico.md`](documentacion/manual_tecnico.md) | arquitectura, base de conocimientos, reglas, integración, conteo de mínimos y SOLID |
 | [`documentacion/guia_defensa.md`](documentacion/guia_defensa.md) | hechos y reglas, unificación, recursividad, backtracking, flujo C ↔ Prolog y demo en vivo |
 | [`documentacion/diseno.md`](documentacion/diseno.md) | diseño previo y decisiones |
-| [`pruebas/casos_prueba.txt`](pruebas/casos_prueba.txt) | 28 casos con entrada, esperado, obtenido y evidencia |
+| [`pruebas/casos_prueba.txt`](pruebas/casos_prueba.txt) | 31 casos con entrada, esperado, obtenido y evidencia |

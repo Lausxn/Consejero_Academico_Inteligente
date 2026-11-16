@@ -14,7 +14,7 @@
 /* Carne: exactamente 9 digitos (cedula). */
 int validar_carne(const char *texto);
 
-/* Codigo de curso: 2-3 letras + 1-3 digitos + 'o' opcional
+/* Codigo de curso: 2-4 letras + 1-4 digitos + 'o' opcional
    (eif200, EG1, eif420o). Acepta mayusculas o minusculas. */
 int validar_codigo_curso(const char *texto);
 

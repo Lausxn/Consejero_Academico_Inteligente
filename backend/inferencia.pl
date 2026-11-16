@@ -8,6 +8,7 @@
 :- module(inferencia, [
     % --- recursivas sobre el grafo de requisitos
     requiere_indirecto/2,
+    curso_en_ciclo/1,
     cadena_requisitos/2,
     pendientes_totales/3,
     ruta_hacia/3,
@@ -68,6 +69,25 @@ requiere_indirecto(C, R) :-
 requiere_indirecto(C, R) :-
     requisito(C, X),
     requiere_indirecto(X, R).
+
+%!  curso_en_ciclo(?Curso)
+%   Verificacion de integridad: Curso termina requiriendose a si mismo
+%   (el plan dejaria de ser aciclico, por ejemplo por un requisito mal
+%   agregado en vivo). Usa una lista de visitados, asi que siempre termina.
+curso_en_ciclo(C) :-
+    existe_curso(C),
+    once(alcanza(C, C, [C])).
+
+%   alcanza(+Desde, +Objetivo, +Visitados)
+%   - Caso base: Objetivo es requisito directo de Desde.
+%   - Caso recursivo: seguir por un requisito no visitado.
+%   Terminacion: Visitados crece en cada paso y el plan es finito.
+alcanza(Desde, Objetivo, _) :-
+    requisito(Desde, Objetivo).
+alcanza(Desde, Objetivo, Visitados) :-
+    requisito(Desde, X),
+    \+ memberchk(X, Visitados),
+    alcanza(X, Objetivo, [X|Visitados]).
 
 %!  cadena_requisitos(+Curso, -Lista)
 %   Todos los requisitos (directos e indirectos), sin repetir.

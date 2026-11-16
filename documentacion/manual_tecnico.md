@@ -144,6 +144,7 @@ Son `estudiante(Carne, Nombre)` y `aprobado(Carne, Curso)`, declarados `dynamic`
 | `describir_pendiente/3` | el requisito pendiente no tiene faltantes | describir sus faltantes | grafo acíclico |
 | `suma_creditos/2` | `[]` suma 0 | cabeza + suma de la cola | la lista se acorta |
 | `leer_terminos/1` | `end_of_file` | cargar un término y seguir | el archivo es finito |
+| `curso_en_ciclo/1` → `alcanza/3` | el objetivo es requisito directo | seguir por un requisito no visitado | la lista de visitados crece; sirve para detectar ciclos agregados en vivo |
 
 ### 4.3 Backtracking
 
@@ -209,7 +210,7 @@ consulta_<caso>(+Arg1, ..., +ArgN, -Fila)
 - **Error del dominio:** `throw(error_sipa(Mensaje))`.
 - Toda la salida pasa por `responder/2`, que la entrega en texto plano y sin acentos.
 
-Hay 21 consultas: `consulta_existe_estudiante`, `consulta_existe_curso`, `consulta_estudiantes`, `consulta_registrar_estudiante`, `consulta_agregar_aprobado`, `consulta_quitar_aprobado`, `consulta_aprobados`, `consulta_tipos`, `consulta_plan_nivel`, `consulta_plan_tipo`, `consulta_requisitos_curso`, `consulta_disponibles`, `consulta_que_falta`, `consulta_ruta`, `consulta_choques`, `consulta_recomendar`, `consulta_avance`, `consulta_reporte`, `consulta_guardar`, `consulta_cargar` y `consulta_recargar_base`.
+Hay 22 consultas: `consulta_existe_estudiante`, `consulta_existe_curso`, `consulta_estudiantes`, `consulta_registrar_estudiante`, `consulta_agregar_aprobado`, `consulta_quitar_aprobado`, `consulta_aprobados`, `consulta_tipos`, `consulta_plan_nivel`, `consulta_plan_tipo`, `consulta_requisitos_curso`, `consulta_disponibles`, `consulta_que_falta`, `consulta_ruta`, `consulta_choques`, `consulta_modalidades`, `consulta_recomendar`, `consulta_avance`, `consulta_reporte`, `consulta_guardar`, `consulta_cargar` y `consulta_recargar_base`.
 
 ### 5.3 `conexion.h`
 
@@ -273,6 +274,9 @@ Usuario elige "4. Cursos disponibles"
 | D10 | Carné = cédula de 9 dígitos | formato en C, existencia en Prolog |
 | D11 | Optativos sin horario = "no ofertado" | pueden estar disponibles, pero no entran en combinaciones |
 | D12 | "Mínimo de etapas" y "ciclos estimados" | las etapas no respetan el tope; los ciclos estimados sí |
+| D13 | Tipos de curso, modalidades y topes los entrega Prolog | C arma los submenús sin conocer el dominio (`consulta_tipos`, `consulta_modalidades`) |
+| D14 | Formato de código de curso amplio (2–4 letras, 1–4 dígitos) | acepta cursos nuevos agregados en vivo; la existencia la decide Prolog |
+| D15 | Detección de ciclos al recargar | las recursivas suponen un grafo acíclico; un requisito mal agregado se advierte en lugar de colgar el sistema |
 
 El detalle está en `documentacion/diseno.md`.
 
@@ -282,9 +286,9 @@ El detalle está en `documentacion/diseno.md`.
 
 | Tipo | Archivo | Resultado |
 |---|---|---|
-| Unitarias del back-end (plunit) | `pruebas/pruebas_prolog.pl` | **60/60** |
+| Unitarias del back-end (plunit) | `pruebas/pruebas_prolog.pl` | **63/63** |
 | Integración C ↔ Prolog | `pruebas/prueba_integracion.c` | **17/17** |
-| Casos documentados | `pruebas/casos_prueba.txt` | **28** casos con entrada, esperado, obtenido y evidencia |
+| Casos documentados | `pruebas/casos_prueba.txt` | **31** casos con entrada, esperado, obtenido y evidencia |
 
 Comandos: `mingw32-make test`, `mingw32-make test-c` y `mingw32-make test-todo`. Las pruebas usan copias temporales de `registros.txt` y una carpeta temporal para los reportes, así que no modifican `datos/`.
 
@@ -297,15 +301,15 @@ Los números de cantidad se obtuvieron recorriendo los módulos cargados con `cu
 | Mínimo exigido | Requerido | Obtenido | Dónde (predicados) |
 |---|---|---|---|
 | Hechos | 40 | **224** estáticos (+65 dinámicos) | `hechos.pl`: 156 (`curso/6` ×67, `requisito/2` ×81, graduación y áreas ×8); `datos_ficticios.pl`: 68 (`horario/5` ×58, `correquisito_base/2` ×3, `dia_semana/2` ×5, topes ×2); `registros.txt`: 5 `estudiante/2` + 60 `aprobado/2` |
-| Reglas | 20 | **184** cláusulas con cuerpo | `reglas` 25 · `inferencia` 48 · `explicaciones` 27 · `consultas` 70 · `estudiantes` 14 |
-| Predicados propios | 15 | **176** | `hechos` 7 · `datos_ficticios` 5 · `estudiantes` 11 · `reglas` 23 · `inferencia` 44 · `explicaciones` 23 · `consultas` 63 |
-| Consultas distintas | 10 | **21** | los `consulta_*` de §5.2 |
-| Reglas recursivas | 2 | **8** | `requiere_indirecto/2`, `ruta_atras/4`, `cierre/4`, `etapas/3`, `ciclos_estimados/3`, `describir_pendiente/3`, `suma_creditos/2`, `leer_terminos/1` |
+| Reglas | 20 | **189** cláusulas con cuerpo | `reglas` 25 · `inferencia` 51 · `explicaciones` 27 · `consultas` 72 · `estudiantes` 14 |
+| Predicados propios | 15 | **180** | `hechos` 7 · `datos_ficticios` 5 · `estudiantes` 11 · `reglas` 23 · `inferencia` 46 · `explicaciones` 23 · `consultas` 65 |
+| Consultas distintas | 10 | **22** | los `consulta_*` de §5.2 |
+| Reglas recursivas | 2 | **9** | `requiere_indirecto/2`, `alcanza/3`, `ruta_atras/4`, `cierre/4`, `etapas/3`, `ciclos_estimados/3`, `describir_pendiente/3`, `suma_creditos/2`, `leer_terminos/1` |
 | Operaciones con listas | 3 | **10+** | `findall/3` (`cursos_disponibles`), `setof/3` (`cadena_requisitos`), `member/2` y `memberchk/2` (`choca_con`), `subtract/3` (`pendientes_totales`), `suma_creditos/2` (recorrido propio), `include/3` (`candidatos_combinacion`), `keysort/2` + `pairs_values/2` (`cursos_priorizados`), `append/3` (`cierre`), `list_to_set/2` (`seleccion_valida`) |
 | Escenarios de backtracking | 3 | **4** | `disponible/2`, `combinacion_valida/3`, `asignar_grupos/2`, `ruta_hacia/3` |
 | Reglas de inferencia compuestas | 5 | **7** | `disponible/2`, `atrasado/2`, `cursos_priorizados/2`, `combinacion_maximal/3`, `recomendar_anual/4`, `cumple_diplomado/1`, `cumple_bachillerato/1` |
 | Explicaciones | 5 | **6** | `explicar_disponible/3`, `explicar_no_disponible/3`, `explicar_recomendacion/3`, `explicar_choque/3`, `explicar_ruta/3`, `explicar_avance/2` |
-| Casos de prueba | 15 | **28** documentados (60 plunit + 17 de integración) | `pruebas/casos_prueba.txt` |
+| Casos de prueba | 15 | **31** documentados (63 plunit + 17 de integración) | `pruebas/casos_prueba.txt` |
 
 ---
 

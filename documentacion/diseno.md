@@ -119,7 +119,7 @@ Los cursos de I a IV nivel tienen horario. Solo algunos optativos tienen horario
 | `consulta_que_falta(Carne, Curso, Fila)` | 5 |
 | `consulta_ruta(Carne, Meta, Fila)` | 6 |
 | `consulta_choques(Seleccion, Fila)` | 7 |
-| `consulta_recomendar(Carne, Modalidad, Tope, Fila)` | 8 |
+| `consulta_modalidades(Fila)`, `consulta_recomendar(Carne, Modalidad, Tope, Fila)` | 8 (las modalidades y topes los da Prolog) |
 | `consulta_avance(Carne, Fila)` | 9 |
 | `consulta_reporte(Carne, Fila)` | 10 |
 | `consulta_guardar(Fila)`, `consulta_cargar(Fila)` | 11 y al iniciar/salir |

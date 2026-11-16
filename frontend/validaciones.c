@@ -9,10 +9,12 @@
 #include <string.h>
 
 #define LARGO_CARNE            9
+/* Un poco mas amplio que los codigos actuales (eif200, eg1, eif420o) para
+   aceptar cursos nuevos que se agreguen en vivo a hechos.pl. */
 #define MIN_LETRAS_CODIGO      2
-#define MAX_LETRAS_CODIGO      3
+#define MAX_LETRAS_CODIGO      4
 #define MIN_DIGITOS_CODIGO     1
-#define MAX_DIGITOS_CODIGO     3
+#define MAX_DIGITOS_CODIGO     4
 #define SUFIJO_OPTATIVO        'o'
 #define MIN_CURSOS_SELECCION   2
 #define TAM_SELECCION          512

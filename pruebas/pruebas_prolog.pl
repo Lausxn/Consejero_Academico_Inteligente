@@ -365,7 +365,7 @@ test(choque_inevitable_sin_solucion) :-
     findall(F, consulta_choques("eif402 eif412", F), Fs),
     memberchk(["Sin solucion", _], Fs).
 
-test(recargar_base) :-
+test(recargar_base, [nondet]) :-
     consulta_recargar_base([Msg]),
     contiene(Msg, '67 cursos').
 
@@ -423,3 +423,31 @@ test(reporte_estudiante_inexistente) :-
     contiene(M, 'No existe').
 
 :- end_tests(reportes).
+
+% ---------------------------------------------------------------------
+% Revision final: robustez ante cambios en vivo y datos editados a mano
+% ---------------------------------------------------------------------
+:- begin_tests(robustez, [setup(usar_registros_temporales),
+                          cleanup(restaurar_registros)]).
+
+% El plan oficial es aciclico (condicion de terminacion de las recursivas).
+test(plan_sin_ciclos, [fail]) :-
+    curso_en_ciclo(_).
+
+% Las modalidades y sus topes vienen de Prolog, no de C.
+test(modalidades_desde_prolog, [true(Ms == ["ciclo", "anual"])]) :-
+    findall(M, consulta_modalidades([M, _]), Ms).
+
+% Una linea mal escrita en registros.txt se salta y el resto se carga.
+test(registros_con_linea_invalida) :-
+    tmp_file_stream(text, Tmp, S),
+    format(S, "estudiante(111222333, 'Uno').~n", []),
+    format(S, "esto no es ( un termino valido.~n", []),
+    format(S, "aprobado(111222333, eif200).~n", []),
+    close(S),
+    catch(with_output_to(string(_), cargar_registros(Tmp)), _, fail),
+    delete_file(Tmp),
+    estudiante(111222333, 'Uno'),
+    aprobado(111222333, eif200).
+
+:- end_tests(robustez).

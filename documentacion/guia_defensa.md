@@ -255,4 +255,5 @@ Este ensayo ya se probó (caso CP-28 de `pruebas/casos_prueba.txt`).
 | ¿Cómo se prioriza la recomendación? | Atrasados → cursos del plan antes que optativos → los que desbloquean más → nivel/ciclo (`cursos_priorizados/2`). |
 | ¿Cómo funciona el plan anual? | Recomienda el ciclo 1, **simula** que lo aprueba con un carné temporal `sim(Est)` que siempre se borra, y recomienda el ciclo 2. El total no pasa de 36. |
 | ¿Cómo se demuestra SOLID? | `manual_tecnico.md` §10 tiene un ejemplo del código por principio. |
-| ¿Cuántas pruebas hay? | 60 plunit, 17 de integración en C y 28 casos documentados. |
+| ¿Cuántas pruebas hay? | 63 plunit, 17 de integración en C y 31 casos documentados. |
+| ¿Qué pasa si se agrega un requisito que forma un ciclo? | Al recargar (opción 12) el sistema lo detecta con `curso_en_ciclo/1`, que usa una lista de visitados y siempre termina, y muestra una ADVERTENCIA con los cursos del ciclo. Las reglas recursivas suponen un grafo acíclico, así que hay que corregir `hechos.pl` y recargar. |

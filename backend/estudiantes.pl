@@ -114,8 +114,10 @@ cargar_registros(Ruta) :-
     ).
 
 % leer_terminos(+Entrada): recorrido recursivo hasta end_of_file.
+% syntax_errors(dec10): una linea mal escrita se informa y se salta, sin
+% perder el resto de los registros.
 leer_terminos(Entrada) :-
-    read_term(Entrada, Termino, []),
+    read_term(Entrada, Termino, [syntax_errors(dec10)]),
     (   Termino == end_of_file
     ->  true
     ;   cargar_termino(Termino),

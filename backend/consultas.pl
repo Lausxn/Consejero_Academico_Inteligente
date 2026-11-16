@@ -32,6 +32,7 @@
     consulta_que_falta/3,
     consulta_ruta/3,
     consulta_choques/2,
+    consulta_modalidades/1,
     consulta_recomendar/4,
     consulta_avance/2,
     consulta_reporte/2,
@@ -481,7 +482,18 @@ filas_asignacion(Cursos, Filas) :-
 % 8. Recomendar combinaciones
 % =====================================================================
 
-%   Modalidad: "ciclo" (tope maximo 18) o "anual" (tope maximo 36)
+%!  consulta_modalidades(-Fila)
+%   Fila: [Modalidad, Descripcion]. C arma el submenu con esto, asi no
+%   conoce los topes de creditos (si cambian en datos_ficticios.pl, el
+%   menu cambia solo).
+consulta_modalidades(Fila) :-
+    tope_creditos_ciclo(Ciclo),
+    tope_creditos_anual(Anual),
+    format(atom(DCiclo), "un ciclo, tope maximo ~w creditos", [Ciclo]),
+    format(atom(DAnual), "un anio de dos ciclos, tope maximo ~w creditos", [Anual]),
+    emitir([[ciclo, DCiclo], [anual, DAnual]], Fila).
+
+%   Modalidad: "ciclo" (tope por ciclo) o "anual" (tope anual)
 %   Fila: [Etiqueta, Valor]
 consulta_recomendar(CarneT, ModalidadT, TopeT, Fila) :-
     estudiante_registrado(CarneT, Carne),
@@ -698,4 +710,18 @@ consulta_recargar_base(Fila) :-
     aggregate_all(count, requisito(_, _), NR),
     format(atom(Msg),
            "Base de conocimientos recargada: ~w cursos y ~w requisitos.", [NC, NR]),
-    responder([Msg], Fila).
+    advertencia_ciclos(Advertencias),
+    emitir([[Msg]|Advertencias], Fila).
+
+% Si un requisito agregado en vivo crea un ciclo, se avisa: las reglas
+% recursivas suponen que el grafo de requisitos es aciclico.
+advertencia_ciclos(Advertencias) :-
+    findall(C, curso_en_ciclo(C), EnCiclo),
+    (   EnCiclo == []
+    ->  Advertencias = []
+    ;   texto_lista(EnCiclo, L),
+        format(atom(Msg),
+               "ADVERTENCIA: los requisitos forman un ciclo en ~w. Corrija hechos.pl y recargue.",
+               [L]),
+        Advertencias = [[Msg]]
+    ).

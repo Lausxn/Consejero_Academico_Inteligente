@@ -60,7 +60,7 @@ Desde la **carpeta raíz del proyecto** (la que contiene el `Makefile`):
 |---|---|
 | `mingw32-make` | compila `build/consejero.exe` |
 | `mingw32-make run` | compila y ejecuta el programa |
-| `mingw32-make test` | corre las 60 pruebas del back-end (plunit) |
+| `mingw32-make test` | corre las 63 pruebas del back-end (plunit) |
 | `mingw32-make test-c` | corre las 17 pruebas de integración C ↔ Prolog |
 | `mingw32-make test-todo` | corre todas las pruebas |
 | `mingw32-make prolog` | abre el back-end en `swipl`, para hacer consultas a mano |

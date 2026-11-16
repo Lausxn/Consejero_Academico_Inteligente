@@ -5,14 +5,14 @@ Lausen Paniagua Arias - Genesis Silesky Araya
 ======================================================================
 
 COMO REPRODUCIR (desde la raiz del proyecto)
-  mingw32-make test        pruebas plunit del back-end (60 pruebas)
+  mingw32-make test        pruebas plunit del back-end (63 pruebas)
   mingw32-make test-c      pruebas de integracion C <-> Prolog (17 pruebas)
   mingw32-make test-todo   ambas
 Las pruebas no modifican datos/: usan copias temporales de
 registros.txt y una carpeta temporal para los reportes.
 
 ULTIMA EJECUCION (2026-11-15, Windows 11, SWI-Prolog 10.1.16, GCC 16.2.0)
-  plunit:      "All 60 tests passed"
+  plunit:      "All 63 tests passed"
   integracion: "17 de 17 pruebas de integracion pasaron."
 
 PERFILES DE PRUEBA (datos/registros.txt)
@@ -313,9 +313,37 @@ CP-28  Agregar un requisito en hechos.pl sin recompilar C
   Resultado: PASA
 
 ======================================================================
+H. ROBUSTEZ (revision final)
+======================================================================
+
+CP-29  Un requisito que forma un ciclo se detecta al recargar
+  Entrada:   agregar requisito(eif200, eif402). a hechos.pl y usar la opcion 12
+  Esperado:  la recarga avisa del ciclo en lugar de colgar el sistema
+  Obtenido:  "ADVERTENCIA: los requisitos forman un ciclo en EIF200, ..."
+             (11 cursos); con el plan oficial no hay ciclos
+  Evidencia: robustez:plan_sin_ciclos, ensayo con build/consejero.exe
+             (hechos.pl restaurado despues)
+  Resultado: PASA
+
+CP-30  Modalidades y topes vienen de Prolog, no de C
+  Entrada:   opcion 8 / consulta_modalidades
+  Esperado:  el submenu muestra los topes definidos en datos_ficticios.pl
+  Obtenido:  "1. ciclo (un ciclo, tope maximo 18 creditos)"
+             "2. anual (un anio de dos ciclos, tope maximo 36 creditos)"
+  Evidencia: robustez:modalidades_desde_prolog, Menu (opcion 8)
+  Resultado: PASA
+
+CP-31  Una linea mal escrita en registros.txt no impide cargar el resto
+  Entrada:   archivo con un estudiante, una linea invalida y un aprobado
+  Esperado:  se informa la linea invalida y se cargan los otros dos hechos
+  Obtenido:  estudiante(111222333, Uno) y aprobado(111222333, eif200) cargados
+  Evidencia: robustez:registros_con_linea_invalida
+  Resultado: PASA
+
+======================================================================
 RESUMEN
 ======================================================================
-  Casos documentados:          28 (minimo requerido: 15)
-  Pruebas plunit:              60 / 60
+  Casos documentados:          31 (minimo requerido: 15)
+  Pruebas plunit:              63 / 63
   Pruebas de integracion C:    17 / 17
   Casos que fallan:            0

@@ -26,7 +26,7 @@
 #define TAM_CODIGO       16
 #define MAX_NOMBRE       80
 #define MAX_NIVEL_C      99     /* el maximo real lo valida Prolog */
-#define MAX_TOPE_C       99     /* idem: Prolog aplica 18 / 36     */
+#define MAX_TOPE_C       99     /* idem: el tope real lo aplica Prolog */
 #define OPCION_SALIR     0
 #define CANCELAR_AYUDA   "(Enter para cancelar)"
 
@@ -97,36 +97,40 @@ static int pedir_carne_nuevo(char *carne)
     }
 }
 
+/* Le pregunta a Prolog si el valor existe (consulta_existe_*) y muestra
+   el dato encontrado o el motivo del error. Devuelve 1 si existe. */
+static int confirmar_existencia(const char *consulta, const char *valor,
+                                const char *etiqueta)
+{
+    ResultadoConsulta resultado;
+    const char *argumentos[] = { valor };
+    int estado = conexion_consultar(consulta, argumentos, 1, &resultado);
+
+    if (estado == CONEXION_OK) {
+        const FilaResultado *fila = &resultado.filas[0];
+        interfaz_dato(etiqueta, fila->columnas[0],
+                      fila->cantidad > 1 ? fila->columnas[1] : NULL);
+    } else {
+        interfaz_error(resultado.mensaje_error);
+    }
+    conexion_liberar(&resultado);
+    return estado == CONEXION_OK;
+}
+
 /* Pide el carne de un estudiante REGISTRADO: valida el formato en C y la
    existencia en Prolog. Con "?" lista los estudiantes. */
 static int pedir_carne_registrado(char *carne)
 {
     for (;;) {
-        ResultadoConsulta resultado;
-        const char *argumentos[1];
-        int estado;
-
         if (!leer("Carne (? = ver estudiantes) " CANCELAR_AYUDA, carne, TAM_CARNE) ||
             carne[0] == '\0') {
             return 0;
         }
         if (strcmp(carne, "?") == 0) {
             mostrar_estudiantes();
-            continue;
-        }
-        if (!validar_carne(carne)) {
+        } else if (!validar_carne(carne)) {
             interfaz_error("El carne debe tener exactamente 9 digitos.");
-            continue;
-        }
-        argumentos[0] = carne;
-        estado = conexion_consultar("consulta_existe_estudiante", argumentos, 1, &resultado);
-        if (estado == CONEXION_OK) {
-            interfaz_dato("Estudiante", resultado.filas[0].columnas[0], NULL);
-        } else {
-            interfaz_error(resultado.mensaje_error);
-        }
-        conexion_liberar(&resultado);
-        if (estado == CONEXION_OK) {
+        } else if (confirmar_existencia("consulta_existe_estudiante", carne, "Estudiante")) {
             return 1;
         }
     }
@@ -136,27 +140,12 @@ static int pedir_carne_registrado(char *carne)
 static int pedir_curso(const char *indicacion, char *codigo)
 {
     for (;;) {
-        ResultadoConsulta resultado;
-        const char *argumentos[1];
-        int estado;
-
         if (!leer(indicacion, codigo, TAM_CODIGO) || codigo[0] == '\0') {
             return 0;
         }
         if (!validar_codigo_curso(codigo)) {
             interfaz_error("Formato de codigo invalido (ejemplos: EIF206, MAT002, EG1, EIF420O).");
-            continue;
-        }
-        argumentos[0] = codigo;
-        estado = conexion_consultar("consulta_existe_curso", argumentos, 1, &resultado);
-        if (estado == CONEXION_OK) {
-            interfaz_dato("Curso", resultado.filas[0].columnas[0],
-                          resultado.filas[0].columnas[1]);
-        } else {
-            interfaz_error(resultado.mensaje_error);
-        }
-        conexion_liberar(&resultado);
-        if (estado == CONEXION_OK) {
+        } else if (confirmar_existencia("consulta_existe_curso", codigo, "Curso")) {
             return 1;
         }
     }
@@ -176,6 +165,32 @@ static int pedir_entero(const char *indicacion, int minimo, int maximo,
         }
         interfaz_error("Debe ingresar un numero entero valido.");
     }
+}
+
+/*
+ * Pide a Prolog una lista de opciones (columna 0 = valor que se envia,
+ * columna 1 = detalle), la muestra numerada y devuelve el numero elegido
+ * (0 si se cancela o falla). Siempre hay que liberar 'opciones'.
+ */
+static int elegir_opcion_de_prolog(const char *consulta, const char *indicacion,
+                                   ResultadoConsulta *opciones)
+{
+    char eleccion[TAM_CODIGO];
+    int indice = 0;
+
+    if (conexion_consultar(consulta, NULL, 0, opciones) != CONEXION_OK) {
+        interfaz_error("No se pudieron obtener las opciones desde Prolog.");
+        return 0;
+    }
+    for (int i = 0; i < opciones->cantidad; i++) {
+        interfaz_opcion_detalle(i + 1, opciones->filas[i].columnas[0],
+                                opciones->filas[i].columnas[1]);
+    }
+    if (!pedir_entero(indicacion, 1, opciones->cantidad, eleccion, sizeof(eleccion)) ||
+        !validar_entero(eleccion, 1, opciones->cantidad, &indice)) {
+        return 0;
+    }
+    return indice;
 }
 
 /* ================================================================== */
@@ -313,7 +328,8 @@ static void plan_por_nivel(void)
 {
     char nivel[TAM_CODIGO];
     const char *argumentos[] = { nivel };
-    if (pedir_entero("Nivel (1-4)", 1, MAX_NIVEL_C, nivel, sizeof(nivel))) {
+    /* el rango de niveles lo valida Prolog (C no sabe cuantos hay) */
+    if (pedir_entero("Nivel", 1, MAX_NIVEL_C, nivel, sizeof(nivel))) {
         ejecutar_y_mostrar("consulta_plan_nivel", argumentos, 1,
                            ENCABEZADOS_PLAN, CANTIDAD(ENCABEZADOS_PLAN),
                            "No hay cursos en ese nivel.");
@@ -324,20 +340,9 @@ static void plan_por_nivel(void)
 static void plan_por_tipo(void)
 {
     ResultadoConsulta tipos;
-    char eleccion[TAM_CODIGO];
-    int indice;
+    int indice = elegir_opcion_de_prolog("consulta_tipos", "Tipo", &tipos);
 
-    if (conexion_consultar("consulta_tipos", NULL, 0, &tipos) != CONEXION_OK) {
-        interfaz_error("No se pudieron obtener los tipos de curso.");
-        conexion_liberar(&tipos);
-        return;
-    }
-    for (int i = 0; i < tipos.cantidad; i++) {
-        interfaz_opcion_detalle(i + 1, tipos.filas[i].columnas[0],
-                                tipos.filas[i].columnas[1]);
-    }
-    if (pedir_entero("Tipo", 1, tipos.cantidad, eleccion, sizeof(eleccion)) &&
-        validar_entero(eleccion, 1, tipos.cantidad, &indice)) {
+    if (indice > 0) {
         const char *argumentos[] = { tipos.filas[indice - 1].columnas[0] };
         ejecutar_y_mostrar("consulta_plan_tipo", argumentos, 1,
                            ENCABEZADOS_PLAN, CANTIDAD(ENCABEZADOS_PLAN),
@@ -429,31 +434,26 @@ static void opcion_choques(void)
     ejecutar_y_mostrar("consulta_choques", argumentos, 1, NULL, 0, "");
 }
 
+/* Las modalidades y sus topes los entrega Prolog: C no conoce los
+   limites de creditos. */
 static void opcion_recomendar(void)
 {
-    static const char *MODALIDADES[] = { "ciclo", "anual" };
+    ResultadoConsulta modalidades;
     char carne[TAM_CARNE];
-    char modalidad[TAM_CODIGO];
     char tope[TAM_CODIGO];
     int indice;
-    const char *argumentos[3];
 
     interfaz_titulo("Recomendar combinaciones de cursos");
     if (!pedir_carne_registrado(carne)) {
         return;
     }
-    interfaz_opcion(1, "Un ciclo (tope maximo 18 creditos)");
-    interfaz_opcion(2, "Un anio, dos ciclos (tope maximo 36 creditos)");
-    if (!pedir_entero("Modalidad", 1, CANTIDAD(MODALIDADES), modalidad, sizeof(modalidad)) ||
-        !validar_entero(modalidad, 1, CANTIDAD(MODALIDADES), &indice) ||
-        !pedir_entero("Tope de creditos", 1, MAX_TOPE_C, tope, sizeof(tope))) {
-        return;
+    indice = elegir_opcion_de_prolog("consulta_modalidades", "Modalidad", &modalidades);
+    if (indice > 0 && pedir_entero("Tope de creditos", 1, MAX_TOPE_C, tope, sizeof(tope))) {
+        const char *argumentos[] = { carne, modalidades.filas[indice - 1].columnas[0], tope };
+        ejecutar_y_mostrar("consulta_recomendar", argumentos, 3, NULL, 0,
+                           "No hay combinaciones posibles.");
     }
-    argumentos[0] = carne;
-    argumentos[1] = MODALIDADES[indice - 1];
-    argumentos[2] = tope;
-    ejecutar_y_mostrar("consulta_recomendar", argumentos, 3, NULL, 0,
-                       "No hay combinaciones posibles.");
+    conexion_liberar(&modalidades);
 }
 
 static void opcion_avance(void)
