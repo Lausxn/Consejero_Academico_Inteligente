@@ -83,6 +83,8 @@ Los cursos de I a IV nivel tienen horario. Solo algunos optativos tienen horario
 | `ruta_hacia/3` | **RECURSIVA, varias soluciones.** `ruta_hacia(Est, Meta, Ruta)`: cadena `[C1, ..., Meta]` donde C1 ya puede cursarse (requisitos completos) y cada Ci es requisito directo de Ci+1. El backtracking genera todas las cadenas. |
 | `cursos_necesarios/3` | **RECURSIVA.** Cierre de la meta bajo requisitos y correquisitos: todo lo que falta aprobar. Termina porque la lista de vistos crece y el plan es finito. |
 | `plan_por_etapas/3` | **RECURSIVA.** Agrupa en etapas los cursos necesarios: E1 = los que ya se pueden llevar, E2 = los que se desbloquean al aprobar E1, etc. La cantidad de etapas es el mínimo de ciclos para llegar a la meta. Termina porque cada etapa tiene al menos un curso. |
+| `plan_hacia_bachillerato/2` | como `plan_por_etapas/3`, pero hacia todos los cursos fijos del Bachillerato que faltan (lo usa el reporte) |
+| `ciclos_estimados/3` | **RECURSIVA** sobre las etapas: ciclos necesarios respetando el tope por ciclo (`ceiling(creditos / tope)` por etapa) |
 | `cursos_que_desbloquea/2` | cursos que tienen a X como requisito directo |
 | `cantidad_desbloquea/2` | cantidad de cursos que dependen de X (directa o indirectamente) |
 | `cursos_disponibles/2` | `findall` de `disponible/2` |

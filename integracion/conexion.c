@@ -261,6 +261,22 @@ static int recorrer_soluciones(predicate_t pred, term_t argumentos, int n,
     return estado;
 }
 
+/* Devuelve NULL si la peticion es valida o el motivo si no lo es. */
+static const char *validar_peticion(const char *consulta, int cantidad_argumentos)
+{
+    if (!prolog_iniciado) {
+        return "Prolog no esta iniciado.";
+    }
+    if (consulta == NULL ||
+        strncmp(consulta, PREFIJO_CONSULTA, strlen(PREFIJO_CONSULTA)) != 0) {
+        return "Solo se permiten predicados consulta_* (API de consultas.pl).";
+    }
+    if (cantidad_argumentos < 0 || cantidad_argumentos > MAX_ARGUMENTOS) {
+        return "Cantidad de argumentos invalida.";
+    }
+    return NULL;
+}
+
 int conexion_consultar(const char *consulta,
                        const char *argumentos[], int cantidad_argumentos,
                        ResultadoConsulta *resultado)
@@ -269,23 +285,12 @@ int conexion_consultar(const char *consulta,
     term_t terminos;
     predicate_t pred;
     int estado;
+    const char *motivo;
 
     iniciar_resultado(resultado);
-
-    if (!prolog_iniciado) {
-        copiar_mensaje(resultado->mensaje_error, CONEXION_TAM_MENSAJE,
-                       "Prolog no esta iniciado.");
-        return CONEXION_ERROR;
-    }
-    if (consulta == NULL ||
-        strncmp(consulta, PREFIJO_CONSULTA, strlen(PREFIJO_CONSULTA)) != 0) {
-        copiar_mensaje(resultado->mensaje_error, CONEXION_TAM_MENSAJE,
-                       "Solo se permiten predicados consulta_* (API de consultas.pl).");
-        return CONEXION_ERROR;
-    }
-    if (cantidad_argumentos < 0 || cantidad_argumentos > MAX_ARGUMENTOS) {
-        copiar_mensaje(resultado->mensaje_error, CONEXION_TAM_MENSAJE,
-                       "Cantidad de argumentos invalida.");
+    motivo = validar_peticion(consulta, cantidad_argumentos);
+    if (motivo != NULL) {
+        copiar_mensaje(resultado->mensaje_error, CONEXION_TAM_MENSAJE, motivo);
         return CONEXION_ERROR;
     }
 
