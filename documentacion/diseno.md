@@ -80,18 +80,19 @@ Los cursos de I a IV nivel tienen horario. Solo algunos optativos tienen horario
 | `requiere_indirecto/2` | **RECURSIVA.** Caso base: requisito directo. Caso recursivo: requisito de un requisito. Termina porque el grafo de requisitos es acíclico. |
 | `cadena_requisitos/2` | `setof` de todos los requisitos (directos e indirectos) |
 | `pendientes_totales/3` | cadena de requisitos menos los aprobados (`subtract`) |
-| `ruta_hacia/3` | **RECURSIVA, varias soluciones.** `ruta_hacia(Est, Meta, Ruta)`: cadena `[C1, ..., Meta]` donde C1 está disponible y cada Ci+1 requiere a Ci. El backtracking genera todas las cadenas. |
-| `plan_por_ciclos/3` | **RECURSIVA.** Agrupa en etapas (ciclos) todos los cursos que faltan para la meta. Termina cuando la lista de pendientes queda vacía; cada paso aprueba en simulación al menos un curso. |
+| `ruta_hacia/3` | **RECURSIVA, varias soluciones.** `ruta_hacia(Est, Meta, Ruta)`: cadena `[C1, ..., Meta]` donde C1 ya puede cursarse (requisitos completos) y cada Ci es requisito directo de Ci+1. El backtracking genera todas las cadenas. |
+| `cursos_necesarios/3` | **RECURSIVA.** Cierre de la meta bajo requisitos y correquisitos: todo lo que falta aprobar. Termina porque la lista de vistos crece y el plan es finito. |
+| `plan_por_etapas/3` | **RECURSIVA.** Agrupa en etapas los cursos necesarios: E1 = los que ya se pueden llevar, E2 = los que se desbloquean al aprobar E1, etc. La cantidad de etapas es el mínimo de ciclos para llegar a la meta. Termina porque cada etapa tiene al menos un curso. |
 | `cursos_que_desbloquea/2` | cursos que tienen a X como requisito directo |
 | `cantidad_desbloquea/2` | cantidad de cursos que dependen de X (directa o indirectamente) |
 | `cursos_disponibles/2` | `findall` de `disponible/2` |
 | `nivel_actual/2`, `atrasado/2` | nivel más alto con aprobados; un curso disponible de nivel menor está atrasado |
-| `prioridad/3`, `cursos_priorizados/2` | orden: atrasados → los que desbloquean más → nivel/ciclo |
+| `cursos_priorizados/2` | orden: atrasados → cursos del plan antes que optativos → los que desbloquean más → nivel/ciclo |
 | `combinacion_valida/3` | **BACKTRACKING.** `combinacion_valida(Est, Tope, [Curso-Grupo, ...])`: sin choques, créditos ≤ tope y correquisitos pendientes incluidos |
 | `combinacion_maximal/3` | combinación válida a la que no se le puede agregar ningún curso más |
 | `asignar_grupos/2` | **BACKTRACKING.** Para una selección del usuario, busca grupos sin choque |
 | `recomendar/4` | primeras N combinaciones maximales en orden de prioridad (`limit/2`) |
-| `recomendar_anual/3` | ciclo 1 + ciclo 2 (simula aprobar el ciclo 1), tope anual de 36 |
+| `recomendar_anual/4` | ciclo 1 + ciclo 2 (simula aprobar el ciclo 1 con un carné temporal `sim(Est)` que se borra siempre), tope anual de 36 |
 | `porcentaje_avance/2` | créditos aprobados / 140 |
 | `cumple_diplomado/1`, `cumple_bachillerato/1` | obligatorios/generales hasta el nivel correspondiente + créditos (+ optativas en el bachillerato) |
 | `optativas_ok/1` | 4 optativas aprobadas, de las cuales al menos 2 son disciplinarias |
