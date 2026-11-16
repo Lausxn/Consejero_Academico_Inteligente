@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "build", "type": "shell", "command": "mingw32-make", "group": { "kind": "build", "isDefault": true }, "problemMatcher": ["$gcc"] },
+    { "label": "run", "type": "shell", "command": "mingw32-make run", "problemMatcher": [] },
+    { "label": "prolog", "type": "shell", "command": "mingw32-make prolog", "problemMatcher": [] },
+    { "label": "test", "type": "shell", "command": "mingw32-make test", "group": "test", "problemMatcher": [] }
+  ]
+}
