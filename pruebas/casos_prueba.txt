@@ -1,0 +1,321 @@
+======================================================================
+CONSEJERO ACADEMICO INTELIGENTE - Casos de prueba documentados
+Proyecto Programado 2 - Paradigmas de Programacion - UNA - II Ciclo 2026
+Lausen Paniagua Arias - Genesis Silesky Araya
+======================================================================
+
+COMO REPRODUCIR (desde la raiz del proyecto)
+  mingw32-make test        pruebas plunit del back-end (60 pruebas)
+  mingw32-make test-c      pruebas de integracion C <-> Prolog (17 pruebas)
+  mingw32-make test-todo   ambas
+Las pruebas no modifican datos/: usan copias temporales de
+registros.txt y una carpeta temporal para los reportes.
+
+ULTIMA EJECUCION (2026-11-15, Windows 11, SWI-Prolog 10.1.16, GCC 16.2.0)
+  plunit:      "All 60 tests passed"
+  integracion: "17 de 17 pruebas de integracion pasaron."
+
+PERFILES DE PRUEBA (datos/registros.txt)
+  208490835  Lausen Paniagua Arias   mitad de II nivel (37 creditos)
+  111110001  Ana Rojas Mora          primer ingreso (0 aprobados)
+  111110002  Carlos Vargas Solis     Diplomado completo (88 creditos)
+  111110003  Maria Jimenez Castro    atrasada: sin LIX411 ni EIF202
+  111110004  Jose Mendez Arias       ejemplo del enunciado
+
+Nombres de evidencia:
+  unidad:prueba  -> prueba plunit en pruebas/pruebas_prolog.pl
+  I-NN           -> caso de pruebas/prueba_integracion.c
+  Menu           -> sesion real del programa (build/consejero.exe)
+
+======================================================================
+A. BASE DE CONOCIMIENTOS Y PERSISTENCIA
+======================================================================
+
+CP-01  El plan de estudios oficial se carga completo
+  Entrada:   carga de backend/hechos.pl
+  Esperado:  67 cursos y requisitos que solo apuntan a cursos existentes
+  Obtenido:  67 cursos; todos los requisitos son consistentes
+  Evidencia: base_conocimientos:cantidad_cursos,
+             base_conocimientos:requisitos_consistentes
+  Resultado: PASA
+
+CP-02  Los creditos del plan cuadran con las reglas de graduacion
+  Entrada:   suma de creditos por nivel
+  Esperado:  I y II nivel + III nivel I ciclo = 88 (Diplomado);
+             cursos fijos + 4 optativas de 3 = 140 (Bachillerato)
+  Obtenido:  88 y 140
+  Evidencia: base_conocimientos:creditos_diplomado,
+             base_conocimientos:creditos_bachillerato
+  Resultado: PASA
+
+CP-03  Persistencia: guardar y volver a cargar no pierde datos (RF-14)
+  Entrada:   guardar_registros + cargar_registros; registrar un
+             estudiante y un aprobado y recargar desde el archivo
+  Esperado:  los mismos hechos antes y despues; el estudiante nuevo y
+             su aprobado aparecen tras recargar
+  Obtenido:  hechos identicos; estudiante 999000111 con EIF200 recuperado
+  Evidencia: estudiantes:guardar_y_cargar, consultas:persistencia_inmediata,
+             I-02 (carga de los 5 perfiles)
+  Resultado: PASA
+
+======================================================================
+B. DISPONIBILIDAD Y REQUISITOS
+======================================================================
+
+CP-04  Primer ingreso solo tiene cursos sin requisitos
+  Entrada:   disponibles de 111110001 (0 aprobados)
+  Esperado:  solo cursos de I nivel sin requisitos y optativos libres
+  Obtenido:  EIF200, MAT030, EG1, EG2, LIX410, EG3, EG4 y optativos libres.
+             Nota: EG3 y EG4 son de I nivel II ciclo, pero el plan oficial
+             no les pone requisitos, por eso tambien salen disponibles.
+  Evidencia: reglas:primer_ingreso_solo_sin_requisitos
+  Resultado: PASA
+
+CP-05  Ejemplo del enunciado: cursos disponibles
+  Entrada:   consulta_disponibles("111110004")
+             (aprobados: EIF200, MAT030, EIF201, MAT002, EIF204, EIF203)
+  Esperado:  EIF206, EIF207, MAT005, MAT006 y EIF202 disponibles;
+             EIF205 (falta EIF202) y EIF211 NO disponibles
+  Obtenido:  22 filas; incluye EIF206, EIF207, MAT005, MAT006, EIF202;
+             no incluye EIF205 ni EIF211
+  Evidencia: reglas:ejemplo_enunciado_disponibles, I-03, I-04, I-05, I-06
+  Resultado: PASA
+
+CP-06  Ejemplo del enunciado: que me falta para EIF211
+  Entrada:   consulta_que_falta("111110004", "EIF211")
+  Esperado:  NO DISPONIBLE porque faltan EIF206 y EIF207
+  Obtenido:  "Estado | NO DISPONIBLE"; faltan directos EIF206, EIF207
+  Evidencia: reglas:ejemplo_enunciado_falta_para_eif211, I-07
+  Resultado: PASA
+
+CP-07  Requisito indirecto (RECURSIVIDAD)
+  Entrada:   requiere_indirecto(eif402, eif207)
+  Esperado:  verdadero, aunque EIF207 no es requisito directo de EIF402
+             (EIF402 -> EIF211 -> EIF207)
+  Obtenido:  verdadero; requisito(eif402, eif207) es falso
+  Evidencia: inferencia:requisito_indirecto,
+             inferencia:sin_requisitos_cadena_vacia (caso base)
+  Resultado: PASA
+
+CP-08  Explicacion paso a paso con la cadena de requisitos (RF-11)
+  Entrada:   explicar_no_disponible(208490835, eif402, T)
+  Esperado:  texto que explique la cadena completa
+  Obtenido:  "No esta disponible porque falta EIF212, que a su vez requiere
+             EIF205; EIF211, que a su vez requiere EIF206 y EIF207."
+  Evidencia: explicaciones:no_disponible_con_cadena
+  Resultado: PASA
+
+CP-09  Un correquisito no cursable bloquea la disponibilidad
+  Entrada:   EIF401 para 111110003 (Maria)
+  Esperado:  cumple los requisitos de EIF401, pero NO esta disponible
+             porque su correquisito EIF402 no se puede cursar
+  Obtenido:  "Cumple sus requisitos, pero su correquisito EIF402 no puede
+             cursarse aun: a EIF402 le falta EIF212, que a su vez requiere
+             EIF205, que a su vez requiere EIF202."
+  Evidencia: reglas:correquisito_bloquea_disponibilidad,
+             explicaciones:no_disponible_por_correquisito
+  Resultado: PASA
+
+======================================================================
+C. RUTAS (RECURSIVIDAD + BACKTRACKING)
+======================================================================
+
+CP-10  Varias rutas hacia un curso meta (BACKTRACKING)
+  Entrada:   ruta_hacia(208490835, eif402, R)  /  opcion 6 del menu
+  Esperado:  todas las cadenas de requisitos hacia EIF402
+  Obtenido:  3 soluciones:
+               EIF205 -> EIF212 -> EIF402
+               EIF206 -> EIF211 -> EIF402
+               EIF207 -> EIF211 -> EIF402
+  Evidencia: inferencia:rutas_multiples, I-08
+  Resultado: PASA
+
+CP-11  Plan por etapas hacia una meta (RECURSIVIDAD)
+  Entrada:   plan_por_etapas(208490835, eif408, E)
+  Esperado:  etapas en orden de requisitos, incluyendo correquisitos
+  Obtenido:  [EIF205, EIF206, EIF207] -> [EIF209, EIF210, EIF211, EIF212]
+             -> [EIF401, EIF402] -> [EIF408]
+  Evidencia: inferencia:plan_por_etapas
+  Resultado: PASA
+
+CP-12  Ciclos estimados respetando el tope de 18 creditos
+  Entrada:   ciclos_estimados con una etapa de 24 creditos y otra de 7
+  Esperado:  3 ciclos (24 cr -> 2 ciclos; 7 cr -> 1 ciclo)
+  Obtenido:  3
+  Evidencia: reportes:ciclos_estimados_respeta_tope
+  Resultado: PASA
+
+CP-13  No se pide ruta para un curso ya aprobado
+  Entrada:   ruta_hacia(208490835, eif200, _)
+  Esperado:  falla (y la consulta muestra "ya esta aprobado")
+  Obtenido:  falla
+  Evidencia: inferencia:ruta_meta_aprobada_falla
+  Resultado: PASA
+
+======================================================================
+D. CHOQUES Y COMBINACIONES (BACKTRACKING)
+======================================================================
+
+CP-14  Choque resoluble entre correquisitos
+  Entrada:   consulta_choques("eif209 eif210")
+  Esperado:  se detecta el choque del grupo 1 (martes 18-21) y se
+             propone otro grupo sin choque
+  Obtenido:  "EIF209 G1 y EIF210 G1 coinciden el martes de 18:00 a 21:00."
+             "Grupos sin choque | EIF209 G1 ...; EIF210 G2 miercoles 18:00-21:00"
+  Evidencia: inferencia:asignar_grupos_resuelve_correquisitos_en_choque, I-09
+  Resultado: PASA
+
+CP-15  Choque inevitable
+  Entrada:   consulta_choques("eif402 eif412")
+  Esperado:  no existe ninguna asignacion de grupos sin choque
+  Obtenido:  "Sin solucion | No existe una combinacion de grupos sin choque..."
+  Evidencia: inferencia:asignar_grupos_choque_inevitable,
+             consultas:choque_inevitable_sin_solucion, I-10
+  Resultado: PASA
+
+CP-16  Toda combinacion generada es valida
+  Entrada:   30 primeras soluciones de combinacion_valida(208490835, 18, C)
+  Esperado:  ninguna supera 18 creditos ni tiene choques
+  Obtenido:  todas validas
+  Evidencia: inferencia:combinaciones_validas
+  Resultado: PASA
+
+CP-17  Un correquisito pendiente va en la misma combinacion
+  Entrada:   estudiante temporal con EIF200 y MAT030; combinaciones que
+             incluyen EIF201
+  Esperado:  todas incluyen tambien MAT002 (correquisito ficticio)
+  Obtenido:  todas lo incluyen
+  Evidencia: inferencia:combinacion_incluye_correquisito
+  Resultado: PASA
+
+======================================================================
+E. RECOMENDACIONES Y AVANCE
+======================================================================
+
+CP-18  Recomendacion para un estudiante con Diplomado
+  Entrada:   consulta_recomendar("111110002", "ciclo", "18")
+  Esperado:  la opcion 1 lleva EIF401 y EIF402 juntos y no lleva EIF412
+             (choca con EIF402)
+  Obtenido:  "Opcion 1 (18 cr) | EIF402 G1; EIF401 G1; EIF400 G1; EIF407 G1;
+             EIF413 G1"
+  Evidencia: inferencia:recomendacion_diplomado, I-11
+  Resultado: PASA
+
+CP-19  Prioridad: los cursos atrasados van primero (RF-12)
+  Entrada:   cursos_priorizados(111110003, L)  (Maria, nivel actual 3)
+  Esperado:  EIF202 (nivel 2) y LIX411 (nivel 1) al inicio, con
+             explicacion de atraso
+  Obtenido:  [EIF202, LIX411, ...]; "Esta atrasado: es de nivel 2 y ya
+             cursa nivel 3. Desbloquea 15 curso(s) en total..."
+  Evidencia: inferencia:atrasados, inferencia:prioridad_atrasados_primero,
+             explicaciones:recomendacion_atrasado
+  Resultado: PASA
+
+CP-20  Plan anual: 18 por ciclo y 36 por anio
+  Entrada:   consulta_recomendar("111110003", "anual", "36")
+  Esperado:  ciclo 1 <= 18, ciclo 2 <= 18, total <= 36 y la simulacion
+             no deja hechos temporales
+  Obtenido:  Ciclo 1 (17 cr) + Ciclo 2 (17 cr) = "34 de 36 creditos
+             permitidos"; no quedan hechos sim(_)
+  Evidencia: inferencia:recomendacion_anual_respeta_topes, Menu (Bloque 5)
+  Resultado: PASA
+
+CP-21  Avance de carrera, Diplomado y Bachillerato
+  Entrada:   consulta_avance("111110002") y porcentaje de 208490835
+  Esperado:  Carlos: 88 creditos, cumple Diplomado, no Bachillerato;
+             Lausen: 26.4 %
+  Obtenido:  "Diplomado | CUMPLE (88 creditos, minimo 88)."
+             "Bachillerato | No cumple: faltan 52 credito(s) y 11 curso(s)..."
+             Lausen: 26.4
+  Evidencia: inferencia:avance_diplomado, inferencia:avance_porcentaje
+  Resultado: PASA
+
+CP-22  Regla de optativas (4, al menos 2 disciplinarias)
+  Entrada:   2 libres + 2 disciplinarias  /  4 libres
+  Esperado:  cumple / no cumple
+  Obtenido:  cumple / no cumple
+  Evidencia: inferencia:optativas_ok
+  Resultado: PASA
+
+CP-23  Reporte de planificacion (RF-15)
+  Entrada:   consulta_reporte("208490835") y ("111110001")
+  Esperado:  archivo .txt con las 6 secciones; si no hay datos, la
+             seccion dice "(sin resultados)"
+  Obtenido:  "Reporte generado en datos/reportes/reporte_208490835.txt
+             (6 secciones)."; el de primer ingreso tiene "(sin resultados)"
+  Evidencia: reportes:reporte_generado_con_secciones,
+             reportes:reporte_sin_aprobados,
+             datos/reportes/reporte_*.txt (5 perfiles)
+  Resultado: PASA
+
+======================================================================
+F. ERRORES Y VALIDACIONES (RF-03, RF-13)
+======================================================================
+
+CP-24  Carne con formato invalido
+  Entrada:   "12ab"
+  Esperado:  error sin consultar el dominio
+  Obtenido:  C: "[ERROR] El carne debe tener exactamente 9 digitos."
+             Prolog: "El carne '12ab' no es valido: debe tener 9 digitos."
+  Evidencia: consultas:error_carne_invalido, I-12, Menu (opcion 9)
+  Resultado: PASA
+
+CP-25  Estudiante o curso inexistente
+  Entrada:   carne 123456789; curso "XYZ999" / "EIF999"
+  Esperado:  mensaje claro de que no existe
+  Obtenido:  "No existe un estudiante con carne 123456789."
+             "El curso 'EIF999' no existe en el plan de estudios."
+  Evidencia: consultas:error_estudiante_inexistente,
+             consultas:error_curso_inexistente,
+             reportes:reporte_estudiante_inexistente, I-13, Menu (opcion 2)
+  Resultado: PASA
+
+CP-26  Tope de creditos fuera de rango
+  Entrada:   consulta_recomendar("208490835", "ciclo", "25")
+  Esperado:  error: el maximo por ciclo es 18
+  Obtenido:  "El tope de creditos por ciclo debe ser un numero entero entre
+             1 y 18."
+  Evidencia: consultas:error_tope_excedido, I-14, Menu (opcion 8)
+  Resultado: PASA
+
+CP-27  Sin resultados, opcion invalida y API protegida
+  Entrada:   aprobados de 111110001; opciones "99" y "abc"; codigo "xx";
+             predicado "halt" desde C
+  Esperado:  aviso de sin resultados; opcion invalida; formato invalido;
+             C rechaza predicados fuera de consulta_*
+  Obtenido:  CONEXION_SIN_RESULTADOS; "[ERROR] Opcion invalida...";
+             "[ERROR] Formato de codigo invalido..."; "Solo se permiten
+             predicados consulta_* (API de consultas.pl)."
+  Evidencia: consultas:sin_resultados_falla, I-15, I-16, Menu (Bloque 5)
+  Resultado: PASA
+
+======================================================================
+G. CAMBIO EN VIVO DE LA BASE DE CONOCIMIENTOS (demo de la defensa)
+======================================================================
+
+CP-28  Agregar un requisito en hechos.pl sin recompilar C
+  Entrada:   1) EIF206 para 111110004 (Jose)
+             2) agregar al final de backend/hechos.pl:
+                    requisito(eif206, eif202).
+             3) opcion 12 "Recargar base de conocimientos"
+             4) volver a consultar EIF206
+  Esperado:  antes DISPONIBLE; despues NO DISPONIBLE porque falta EIF202
+  Obtenido:  Antes:   "Estado | DISPONIBLE"
+                      "Por que | Tiene aprobados todos sus requisitos:
+                       EIF204, MAT002."
+             Recarga: "Base de conocimientos recargada: 67 cursos y 82
+                       requisitos."
+             Despues: "Estado | NO DISPONIBLE"
+                      "Por que | No esta disponible porque falta EIF202."
+  Evidencia: ensayo ejecutado el 2026-11-15 con consulta_recargar_base
+             (make/0); hechos.pl se restauro despues. Ademas
+             consultas:recargar_base (PASA).
+  Resultado: PASA
+
+======================================================================
+RESUMEN
+======================================================================
+  Casos documentados:          28 (minimo requerido: 15)
+  Pruebas plunit:              60 / 60
+  Pruebas de integracion C:    17 / 17
+  Casos que fallan:            0

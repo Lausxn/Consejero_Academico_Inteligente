@@ -26,6 +26,7 @@ ifeq ($(OS),Windows_NT)
   MKDIR     = if not exist $(BUILD) mkdir $(BUILD)
   RMDIR     = if exist $(BUILD) rmdir /s /q $(BUILD)
   EJECUTAR  = $(subst /,\,$(BIN))
+  SEP       = \\
 else
   BIN       = $(BUILD)/consejero
   CFLAGS   += $(shell pkg-config --cflags swipl)
@@ -33,6 +34,7 @@ else
   MKDIR     = mkdir -p $(BUILD)
   RMDIR     = rm -rf $(BUILD)
   EJECUTAR  = ./$(BIN)
+  SEP       = /
 endif
 
 all: $(BIN)
@@ -53,10 +55,23 @@ run: $(BIN)
 prolog:
 	swipl backend/main.pl
 
+# Pruebas del back-end (plunit)
 test:
 	swipl -g run_tests -t halt pruebas/pruebas_prolog.pl
+
+# Pruebas de integracion C <-> Prolog
+PRUEBA_C = $(BUILD)/prueba_integracion$(suffix $(BIN))
+
+$(PRUEBA_C): pruebas/prueba_integracion.c $(BUILD)/conexion.o | $(BUILD)
+	$(CC) $(CFLAGS) pruebas/prueba_integracion.c $(BUILD)/conexion.o -o $@ $(LDLIBS)
+
+test-c: $(PRUEBA_C)
+	$(subst /,$(SEP),$(PRUEBA_C))
+
+# Todas las pruebas
+test-todo: test test-c
 
 clean:
 	@$(RMDIR)
 
-.PHONY: all run prolog test clean
+.PHONY: all run prolog test test-c test-todo clean

@@ -374,8 +374,26 @@ test(recargar_base) :-
 % ---------------------------------------------------------------------
 % Bloque 6: reportes de planificacion (RF-15)
 % ---------------------------------------------------------------------
-:- begin_tests(reportes, [setup(usar_registros_temporales),
-                          cleanup(restaurar_registros)]).
+% Los reportes de prueba se escriben en una carpeta temporal.
+usar_reportes_temporales :-
+    usar_registros_temporales,
+    tmp_file(reportes, Carpeta),
+    make_directory(Carpeta),
+    asserta(consultas:carpeta_reportes_alternativa(Carpeta)).
+
+restaurar_reportes :-
+    (   retract(consultas:carpeta_reportes_alternativa(Carpeta))
+    ->  delete_directory_and_contents(Carpeta)
+    ;   true
+    ),
+    restaurar_registros.
+
+reporte_de_prueba(Carne, Ruta) :-
+    consultas:carpeta_reportes_alternativa(Carpeta),
+    format(atom(Ruta), "~w/reporte_~w.txt", [Carpeta, Carne]).
+
+:- begin_tests(reportes, [setup(usar_reportes_temporales),
+                          cleanup(restaurar_reportes)]).
 
 % Una etapa de 24 creditos con tope 18 necesita 2 ciclos.
 test(ciclos_estimados_respeta_tope, [true(N == 3)]) :-
@@ -385,7 +403,7 @@ test(ciclos_estimados_respeta_tope, [true(N == 3)]) :-
 test(reporte_generado_con_secciones) :-
     consulta_reporte("208490835", [Msg]),
     contiene(Msg, 'reporte_208490835.txt'),
-    ruta_proyecto('datos/reportes/reporte_208490835.txt', Ruta),
+    reporte_de_prueba(208490835, Ruta),
     read_file_to_string(Ruta, Contenido, []),
     forall(member(Seccion, ["Avance de carrera", "Cursos aprobados",
                             "Cursos disponibles", "Recomendacion para el proximo ciclo",
@@ -396,7 +414,7 @@ test(reporte_generado_con_secciones) :-
 % Primer ingreso: sin aprobados, el reporte igual se genera.
 test(reporte_sin_aprobados, [nondet]) :-
     consulta_reporte("111110001", [_]),
-    ruta_proyecto('datos/reportes/reporte_111110001.txt', Ruta),
+    reporte_de_prueba(111110001, Ruta),
     read_file_to_string(Ruta, Contenido, []),
     sub_string(Contenido, _, _, _, "(sin resultados)").
 

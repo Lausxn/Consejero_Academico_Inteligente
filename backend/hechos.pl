@@ -19,6 +19,10 @@
     area_general/2
 ]).
 
+% Permite agregar cursos o requisitos en cualquier parte del archivo
+% (por ejemplo, al final durante la demo en vivo) sin advertencias.
+:- discontiguous curso/6, requisito/2.
+
 % curso(Codigo, Nombre, Creditos, Nivel, Ciclo, Tipo).
 % Tipo: obligatorio | general | optativo_disciplinario | optativo_libre
 % Nivel/Ciclo = 0 para optativos (no tienen ubicación fija).

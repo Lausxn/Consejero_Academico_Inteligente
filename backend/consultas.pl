@@ -575,11 +575,18 @@ consulta_reporte(CarneT, Fila) :-
     format(atom(Msg), "Reporte generado en ~w (~w secciones).", [Relativa, N]),
     responder([Msg], Fila).
 
+% carpeta_reportes_alternativa/1: solo la usan las pruebas, para no
+% sobrescribir los reportes de datos/reportes.
+:- dynamic carpeta_reportes_alternativa/1.
+
 ruta_reporte(Carne, Ruta, Relativa) :-
     format(atom(Relativa), "datos/reportes/reporte_~w.txt", [Carne]),
-    ruta_proyecto('datos/reportes', Carpeta),
-    make_directory_path(Carpeta),
-    ruta_proyecto(Relativa, Ruta).
+    (   carpeta_reportes_alternativa(Carpeta)
+    ->  format(atom(Ruta), "~w/reporte_~w.txt", [Carpeta, Carne])
+    ;   ruta_proyecto('datos/reportes', Carpeta),
+        ruta_proyecto(Relativa, Ruta)
+    ),
+    make_directory_path(Carpeta).
 
 % Titulo-Meta: Meta se completa con -Fila (mismo contrato que la API).
 secciones_reporte(CarneT, Carne, [
