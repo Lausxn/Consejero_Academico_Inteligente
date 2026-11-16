@@ -6,7 +6,7 @@ Documento de diseño, previo a la implementación. Define los predicados de cada
 
 ## 1. Decisiones de diseño
 
-| # | Decisión | Justificación |
+| # | Decisión | Justificación de Diseno | 
 |---|---|---|
 | D1 | **Prolog incrustado en C** (API `SWI-Prolog.h`) en lugar de pipes. | Hay una sola sesión de Prolog en memoria durante toda la ejecución: los hechos dinámicos (`assert`/`retract`) persisten entre consultas, no hay que interpretar texto, las soluciones se recorren una a una con `PL_next_solution` (backtracking real visible desde C) y los errores llegan como excepciones (`PL_exception`). Con pipes habría que serializar y parsear todo y sincronizar dos procesos. |
 | D2 | **gcc con las rutas de `swipl --dump-runtime-variables`** en vez de `swipl-ld`. | Probado: en Windows, `swipl-ld` 10.1.16 arma `-D_SWIPL_HOME=C:/Program Files/swipl` sin comillas y gcc falla por el espacio. El enunciado permite esta alternativa. En Linux se usa `pkg-config swipl`. |
