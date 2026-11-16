@@ -206,17 +206,19 @@ explicar_choque(C1-G1, C2-G2, Texto) :-
 % =====================================================================
 
 %!  explicar_ruta(+Est, +Ruta, -Texto)
-explicar_ruta(_, [Primero|Resto], Texto) :-
+explicar_ruta(Est, [Primero|Resto], Texto) :-
     texto_codigo(Primero, P),
     (   Resto == []
-    ->  format(atom(Texto), "~w ya cumple sus requisitos: puede matricularlo.", [P])
+    ->  format(atom(Base), "~w ya cumple sus requisitos: puede matricularlo.", [P])
     ;   last(Resto, Meta),
         texto_codigo(Meta, M),
         length(Resto, Pasos),
-        format(atom(Texto),
+        format(atom(Base),
                "Empiece por ~w (ya cumple sus requisitos); cada curso de la ruta es requisito del siguiente, asi que llega a ~w en ~w paso(s) mas.",
                [P, M, Pasos])
-    ).
+    ),
+    frase_correquisitos(Est, Primero, Correquisito),
+    unir_frases([Base, Correquisito], Texto).
 
 % =====================================================================
 % 6. Avance de carrera

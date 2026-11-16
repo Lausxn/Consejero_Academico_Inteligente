@@ -549,9 +549,8 @@ consulta_avance(CarneT, Fila) :-
 
 consulta_guardar(Fila) :-
     persistir,
-    ruta_registros(Ruta),
     aggregate_all(count, estudiante(_, _), N),
-    format(atom(Msg), "Se guardaron ~w estudiante(s) en ~w.", [N, Ruta]),
+    format(atom(Msg), "Se guardaron ~w estudiante(s) en datos/registros.txt.", [N]),
     responder([Msg], Fila).
 
 consulta_cargar(Fila) :-
