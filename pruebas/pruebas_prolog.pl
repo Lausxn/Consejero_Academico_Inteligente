@@ -245,3 +245,128 @@ test(optativas_ok) :-
                             [E]>>( \+ optativas_ok(E) )).
 
 :- end_tests(inferencia).
+
+% ---------------------------------------------------------------------
+% Bloque 3: explicaciones
+% ---------------------------------------------------------------------
+contiene(Texto, Parte) :- sub_atom(Texto, _, _, _, Parte), !.
+
+:- begin_tests(explicaciones, [setup(cargar_perfiles)]).
+
+test(no_disponible_ejemplo_enunciado) :-
+    explicar_no_disponible(111110004, eif211, T),
+    contiene(T, 'EIF206'), contiene(T, 'EIF207').
+
+% Justificacion paso a paso con la cadena de requisitos.
+test(no_disponible_con_cadena) :-
+    explicar_no_disponible(208490835, eif402, T),
+    contiene(T, 'EIF211, que a su vez requiere EIF206 y EIF207').
+
+test(no_disponible_por_correquisito) :-
+    explicar_no_disponible(111110003, eif401, T),
+    contiene(T, 'correquisito EIF402').
+
+test(no_disponible_ya_aprobado) :-
+    explicar_no_disponible(208490835, eif200, T),
+    contiene(T, 'Ya fue aprobado').
+
+test(disponible_sin_requisitos) :-
+    explicar_disponible(111110001, eif200, T),
+    contiene(T, 'ingreso a carrera').
+
+test(explicar_choque) :-
+    explicar_choque(eif206-1, eif207-1, T),
+    contiene(T, 'martes de 16:00 a 19:00').
+
+test(recomendacion_atrasado) :-
+    explicar_recomendacion(111110003, eif202, T),
+    contiene(T, 'atrasado').
+
+:- end_tests(explicaciones).
+
+% ---------------------------------------------------------------------
+% Bloque 3: API de consultas (contrato que usa C)
+% Usa una copia temporal de registros.txt para no modificar el real.
+% ---------------------------------------------------------------------
+usar_registros_temporales :-
+    ruta_proyecto('datos/registros.txt', Real),
+    tmp_file_stream(text, Tmp, S), close(S),
+    copy_file(Real, Tmp),
+    asserta(estudiantes:ruta_alternativa(Tmp)),
+    cargar_registros(Tmp).
+
+restaurar_registros :-
+    (   retract(estudiantes:ruta_alternativa(Tmp))
+    ->  delete_file(Tmp)
+    ;   true
+    ),
+    cargar_perfiles.
+
+% Toda fila es una lista de strings en texto plano (ASCII).
+fila_valida(Fila) :-
+    is_list(Fila),
+    forall(member(Col, Fila),
+           ( string(Col), string_codes(Col, Cs),
+             forall(member(C, Cs), C < 128) )).
+
+error_de(Meta, Mensaje) :-
+    catch(( call(Meta), fail ), error_sipa(Mensaje), true).
+
+:- begin_tests(consultas, [setup(usar_registros_temporales),
+                           cleanup(restaurar_registros)]).
+
+test(contrato_filas_texto_plano) :-
+    forall(member(M, [ consulta_disponibles("208490835"),
+                       consulta_que_falta("208490835", "EIF402"),
+                       consulta_ruta("208490835", "eif408"),
+                       consulta_choques("eif206 eif207"),
+                       consulta_recomendar("208490835", "ciclo", "18"),
+                       consulta_recomendar("208490835", "anual", "36"),
+                       consulta_avance("208490835"),
+                       consulta_plan_nivel("1"),
+                       consulta_plan_tipo("optativo_libre"),
+                       consulta_requisitos_curso("eif402") ]),
+           ( findall(F, call(M, F), Fs), Fs \== [],
+             forall(member(F, Fs), fila_valida(F)) )).
+
+% Cada solucion es una fila: el backtracking da varias.
+test(varias_soluciones, [true(N > 5)]) :-
+    aggregate_all(count, consulta_disponibles("111110004", _), N).
+
+test(error_carne_invalido) :-
+    error_de(consulta_disponibles("12ab", _), M),
+    contiene(M, '9 digitos').
+
+test(error_estudiante_inexistente) :-
+    error_de(consulta_avance("123456789", _), M),
+    contiene(M, 'No existe').
+
+test(error_curso_inexistente) :-
+    error_de(consulta_que_falta("208490835", "XYZ999", _), M),
+    contiene(M, 'no existe').
+
+test(error_tope_excedido) :-
+    error_de(consulta_recomendar("208490835", "ciclo", "25", _), M),
+    contiene(M, '18').
+
+test(sin_resultados_falla, [fail]) :-
+    consulta_aprobados("111110001", _).
+
+% Registrar y aprobar quedan guardados en el archivo (RF-14).
+test(persistencia_inmediata) :-
+    consulta_registrar_estudiante("999000111", "Prueba Temporal", _),
+    once(consulta_agregar_aprobado("999000111", "EIF200", _)),
+    ruta_registros(Ruta),
+    cargar_registros(Ruta),
+    estudiante(999000111, 'Prueba Temporal'),
+    aprobado(999000111, eif200).
+
+test(choque_inevitable_sin_solucion) :-
+    findall(F, consulta_choques("eif402 eif412", F), Fs),
+    memberchk(["Sin solucion", _], Fs).
+
+test(recargar_base) :-
+    consulta_recargar_base([Msg]),
+    contiene(Msg, '67 cursos').
+
+:- end_tests(consultas).

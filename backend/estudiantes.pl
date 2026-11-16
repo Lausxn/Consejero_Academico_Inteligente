@@ -44,6 +44,12 @@ ruta_proyecto(Relativa, Absoluta) :-
     file_directory_name(Dir, Raiz),
     atomic_list_concat([Raiz, '/', Relativa], Absoluta).
 
+% ruta_alternativa/1: solo la usan las pruebas, para no escribir sobre
+% el registros.txt real.
+:- dynamic ruta_alternativa/1.
+
+ruta_registros(Ruta) :-
+    ruta_alternativa(Ruta), !.
 ruta_registros(Ruta) :-
     ruta_proyecto('datos/registros.txt', Ruta).
 

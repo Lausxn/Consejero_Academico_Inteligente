@@ -110,9 +110,9 @@ Los cursos de I a IV nivel tienen horario. Solo algunos optativos tienen horario
 ### 2.7 `consultas.pl` — API única para C
 | Predicado | Opción del menú |
 |---|---|
-| `consulta_registrar_estudiante(Carne, Nombre, Fila)` | 1 |
+| `consulta_registrar_estudiante(Carne, Nombre, Fila)`, `consulta_estudiantes(Fila)` | 1 |
 | `consulta_agregar_aprobado(Carne, Curso, Fila)`, `consulta_quitar_aprobado/3`, `consulta_aprobados/2` | 2 |
-| `consulta_plan_nivel(Nivel, Fila)`, `consulta_plan_tipo(Tipo, Fila)`, `consulta_requisitos_curso(Curso, Fila)` | 3 |
+| `consulta_tipos(Fila)`, `consulta_plan_nivel(Nivel, Fila)`, `consulta_plan_tipo(Tipo, Fila)`, `consulta_requisitos_curso(Curso, Fila)` | 3 (los tipos los da Prolog: C arma el submenú sin conocerlos) |
 | `consulta_disponibles(Carne, Fila)` | 4 |
 | `consulta_que_falta(Carne, Curso, Fila)` | 5 |
 | `consulta_ruta(Carne, Meta, Fila)` | 6 |
