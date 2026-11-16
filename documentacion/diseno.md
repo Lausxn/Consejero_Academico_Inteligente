@@ -34,7 +34,7 @@ estudiantes ─┘
 ### 2.1 `hechos.pl` — plan oficial (sin cambios respecto al enunciado)
 | Predicado | Tipo | Descripción |
 |---|---|---|
-| `curso/6` | hecho | `curso(Codigo, Nombre, Creditos, Nivel, Ciclo, Tipo)` (69 cursos) |
+| `curso/6` | hecho | `curso(Codigo, Nombre, Creditos, Nivel, Ciclo, Tipo)` (67 cursos: 36 de nivel, 23 optativos disciplinarios, 8 libres) |
 | `requisito/2` | hecho | `requisito(Curso, CursoRequerido)` |
 | `creditos_diplomado/1`, `creditos_bachillerato/1` | hecho | 88 y 140 |
 | `optativas_requeridas/1`, `min_optativas_disciplinarias/1` | hecho | 4 y 2 |

@@ -1,0 +1,77 @@
+% Registros del Consejero Academico Inteligente.
+% Perfiles de prueba (ver documentacion/diseno.md, seccion 8).
+
+% Perfil 2: mitad de II nivel
+estudiante(208490835, 'Lausen Paniagua Arias').
+aprobado(208490835, eif200).
+aprobado(208490835, mat030).
+aprobado(208490835, lix410).
+aprobado(208490835, eif201).
+aprobado(208490835, mat002).
+aprobado(208490835, lix411).
+aprobado(208490835, eif202).
+aprobado(208490835, eif203).
+aprobado(208490835, eif204).
+aprobado(208490835, mat005).
+
+% Perfil 1: primer ingreso (0 aprobados)
+estudiante(111110001, 'Ana Rojas Mora').
+
+% Perfil 3: Diplomado completo (I y II nivel + III nivel I ciclo = 88 creditos)
+estudiante(111110002, 'Carlos Vargas Solis').
+aprobado(111110002, eif200).
+aprobado(111110002, mat030).
+aprobado(111110002, eg1).
+aprobado(111110002, eg2).
+aprobado(111110002, lix410).
+aprobado(111110002, eif201).
+aprobado(111110002, mat002).
+aprobado(111110002, eg3).
+aprobado(111110002, eg4).
+aprobado(111110002, lix411).
+aprobado(111110002, eif202).
+aprobado(111110002, eif203).
+aprobado(111110002, eif204).
+aprobado(111110002, mat005).
+aprobado(111110002, lix412).
+aprobado(111110002, eif205).
+aprobado(111110002, eif206).
+aprobado(111110002, eif207).
+aprobado(111110002, eif404).
+aprobado(111110002, mat006).
+aprobado(111110002, eif208).
+aprobado(111110002, eif209).
+aprobado(111110002, eif210).
+aprobado(111110002, eif211).
+aprobado(111110002, eif212).
+
+% Perfil 4: atrasado (sin LIX411 ni EIF202, pero con cursos de III nivel)
+estudiante(111110003, 'Maria Jimenez Castro').
+aprobado(111110003, eif200).
+aprobado(111110003, mat030).
+aprobado(111110003, eg1).
+aprobado(111110003, eg2).
+aprobado(111110003, eg3).
+aprobado(111110003, eg4).
+aprobado(111110003, lix410).
+aprobado(111110003, eif201).
+aprobado(111110003, mat002).
+aprobado(111110003, eif203).
+aprobado(111110003, eif204).
+aprobado(111110003, mat005).
+aprobado(111110003, eif206).
+aprobado(111110003, eif207).
+aprobado(111110003, eif404).
+aprobado(111110003, mat006).
+aprobado(111110003, eif209).
+aprobado(111110003, eif210).
+aprobado(111110003, eif211).
+
+% Perfil 5: ejemplo del enunciado
+estudiante(111110004, 'Jose Mendez Arias').
+aprobado(111110004, eif200).
+aprobado(111110004, mat030).
+aprobado(111110004, eif201).
+aprobado(111110004, mat002).
+aprobado(111110004, eif204).
+aprobado(111110004, eif203).
