@@ -370,3 +370,38 @@ test(recargar_base) :-
     contiene(Msg, '67 cursos').
 
 :- end_tests(consultas).
+
+% ---------------------------------------------------------------------
+% Bloque 6: reportes de planificacion (RF-15)
+% ---------------------------------------------------------------------
+:- begin_tests(reportes, [setup(usar_registros_temporales),
+                          cleanup(restaurar_registros)]).
+
+% Una etapa de 24 creditos con tope 18 necesita 2 ciclos.
+test(ciclos_estimados_respeta_tope, [true(N == 3)]) :-
+    ciclos_estimados([[eif202, eif400, eif407, eif411, eif412, eif413, lix411],
+                      [eif205, lix412]], 18, N).
+
+test(reporte_generado_con_secciones) :-
+    consulta_reporte("208490835", [Msg]),
+    contiene(Msg, 'reporte_208490835.txt'),
+    ruta_proyecto('datos/reportes/reporte_208490835.txt', Ruta),
+    read_file_to_string(Ruta, Contenido, []),
+    forall(member(Seccion, ["Avance de carrera", "Cursos aprobados",
+                            "Cursos disponibles", "Recomendacion para el proximo ciclo",
+                            "Recomendacion para el proximo anio",
+                            "Plan hacia el Bachillerato"]),
+           sub_string(Contenido, _, _, _, Seccion)).
+
+% Primer ingreso: sin aprobados, el reporte igual se genera.
+test(reporte_sin_aprobados, [nondet]) :-
+    consulta_reporte("111110001", [_]),
+    ruta_proyecto('datos/reportes/reporte_111110001.txt', Ruta),
+    read_file_to_string(Ruta, Contenido, []),
+    sub_string(Contenido, _, _, _, "(sin resultados)").
+
+test(reporte_estudiante_inexistente) :-
+    error_de(consulta_reporte("123456789", _), M),
+    contiene(M, 'No existe').
+
+:- end_tests(reportes).

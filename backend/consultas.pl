@@ -34,6 +34,7 @@
     consulta_choques/2,
     consulta_recomendar/4,
     consulta_avance/2,
+    consulta_reporte/2,
     consulta_guardar/1,
     consulta_cargar/1,
     consulta_recargar_base/1
@@ -357,11 +358,7 @@ filas_que_falta(Carne, C, [['Estado', 'YA APROBADO']]) :-
 filas_que_falta(Carne, C, [['Estado', 'DISPONIBLE'], ['Por que', PorQue]]) :-
     disponible(Carne, C), !,
     explicar_disponible(Carne, C, PorQue).
-filas_que_falta(Carne, C, [ ['Estado', 'NO DISPONIBLE'],
-                            ['Por que', PorQue],
-                            ['Faltan (directos)', TDirectos],
-                            ['Faltan (cadena completa, con correquisitos)', TCadena],
-                            ['Minimo de ciclos', NEtapas] ]) :-
+filas_que_falta(Carne, C, Filas) :-
     explicar_no_disponible(Carne, C, PorQue),
     findall(R, requisito_faltante(Carne, C, R), Directos),
     cursos_necesarios(Carne, C, Necesarios0),
@@ -369,7 +366,22 @@ filas_que_falta(Carne, C, [ ['Estado', 'NO DISPONIBLE'],
     texto_lista(Directos, TDirectos),
     texto_lista(Necesarios, TCadena),
     plan_por_etapas(Carne, C, Etapas),
-    length(Etapas, NEtapas).
+    filas_duracion(Etapas, FilasDuracion),
+    append([ ['Estado', 'NO DISPONIBLE'],
+             ['Por que', PorQue],
+             ['Faltan (directos)', TDirectos],
+             ['Faltan (cadena completa, con correquisitos)', TCadena] ],
+           FilasDuracion, Filas).
+
+%   filas_duracion(+Etapas, -Filas)
+%   Minimo de etapas que permiten los requisitos y ciclos estimados
+%   respetando el tope de creditos por ciclo.
+filas_duracion(Etapas, [ ['Minimo de etapas (sin tope)', NEtapas],
+                         [EtiquetaCiclos, NCiclos] ]) :-
+    length(Etapas, NEtapas),
+    tope_creditos_ciclo(Tope),
+    ciclos_estimados(Etapas, Tope, NCiclos),
+    format(atom(EtiquetaCiclos), "Ciclos estimados (tope ~w cr)", [Tope]).
 
 % =====================================================================
 % 6. Ruta de avance hacia un curso meta
@@ -389,12 +401,12 @@ consulta_ruta(CarneT, MetaT, Fila) :-
     ;   error_sipa("No se pudo construir un plan hacia ~w.", [CodMeta])
     ),
     filas_etapas(Etapas, 1, FilasEtapas),
-    length(Etapas, NEtapas),
+    filas_duracion(Etapas, FilasDuracion),
     filas_rutas(Carne, Meta, FilasRutas),
     texto_curso(Meta, TMeta),
     append([ [['Meta', TMeta]],
              FilasEtapas,
-             [['Minimo de ciclos', NEtapas]],
+             FilasDuracion,
              FilasRutas ], Filas),
     emitir(Filas, Fila).
 
@@ -542,6 +554,111 @@ consulta_avance(CarneT, Fila) :-
     explicar_avance(Carne, Lineas),
     findall([E, T], member(E-T, Lineas), Filas),
     emitir([['Estudiante', TEst]|Filas], Fila).
+
+% =====================================================================
+% 10. Reporte de planificacion (RF-15)
+% =====================================================================
+
+%!  consulta_reporte(+Carne, -Fila)
+%   Escribe datos/reportes/reporte_<carne>.txt. Cada seccion reutiliza
+%   una consulta del menu (DRY): el reporte muestra exactamente lo mismo
+%   que el sistema deduce en pantalla.
+consulta_reporte(CarneT, Fila) :-
+    estudiante_registrado(CarneT, Carne),
+    ruta_reporte(Carne, Ruta, Relativa),
+    secciones_reporte(CarneT, Carne, Secciones),
+    setup_call_cleanup(
+        open(Ruta, write, Salida, [encoding(utf8)]),
+        escribir_reporte(Salida, Carne, Secciones),
+        close(Salida)),
+    length(Secciones, N),
+    format(atom(Msg), "Reporte generado en ~w (~w secciones).", [Relativa, N]),
+    responder([Msg], Fila).
+
+ruta_reporte(Carne, Ruta, Relativa) :-
+    format(atom(Relativa), "datos/reportes/reporte_~w.txt", [Carne]),
+    ruta_proyecto('datos/reportes', Carpeta),
+    make_directory_path(Carpeta),
+    ruta_proyecto(Relativa, Ruta).
+
+% Titulo-Meta: Meta se completa con -Fila (mismo contrato que la API).
+secciones_reporte(CarneT, Carne, [
+        'Avance de carrera'-consulta_avance(CarneT),
+        'Cursos aprobados'-consulta_aprobados(CarneT),
+        'Cursos disponibles (en orden de prioridad)'-consulta_disponibles(CarneT),
+        TituloCiclo-consulta_recomendar(CarneT, "ciclo", TopeCiclo),
+        TituloAnual-consulta_recomendar(CarneT, "anual", TopeAnual),
+        'Plan hacia el Bachillerato (etapas minimas)'-fila_plan_bachillerato(Carne)
+    ]) :-
+    tope_creditos_ciclo(C),
+    tope_creditos_anual(A),
+    format(string(TopeCiclo), "~w", [C]),
+    format(string(TopeAnual), "~w", [A]),
+    format(atom(TituloCiclo), "Recomendacion para el proximo ciclo (tope ~w creditos)", [C]),
+    format(atom(TituloAnual), "Recomendacion para el proximo anio (tope ~w creditos)", [A]).
+
+%   Filas del plan hacia el Bachillerato: etapas + optativas pendientes.
+fila_plan_bachillerato(Carne, Fila) :-
+    (   cumple_bachillerato(Carne)
+    ->  Filas = [['Estado', 'Ya cumple todos los requisitos del Bachillerato.']]
+    ;   plan_hacia_bachillerato(Carne, Etapas),
+        filas_etapas(Etapas, 1, FilasEtapas),
+        filas_duracion(Etapas, FilasDuracion),
+        texto_optativas_pendientes(Carne, TOpt),
+        append([FilasEtapas, FilasDuracion, [['Optativas', TOpt]]], Filas)
+    ),
+    emitir(Filas, Fila).
+
+texto_optativas_pendientes(Carne, Texto) :-
+    optativas_aprobadas(Carne, Aprobadas),
+    length(Aprobadas, N),
+    optativas_requeridas(Req),
+    min_optativas_disciplinarias(MinD),
+    Faltan is max(0, Req - N),
+    format(atom(Texto),
+           "Faltan ~w optativa(s) (al menos ~w disciplinarias en total); se pueden llevar en las etapas.",
+           [Faltan, MinD]).
+
+% Resultado de una seccion; los errores y la falta de resultados se
+% escriben como texto en lugar de cortar el reporte.
+filas_seccion(Meta, Filas) :-
+    catch(findall(F, call(Meta, F), Filas0), error_sipa(M), Filas0 = [[M]]),
+    (   Filas0 == []
+    ->  Filas = [["(sin resultados)"]]
+    ;   Filas = Filas0
+    ).
+
+escribir_reporte(Salida, Carne, Secciones) :-
+    escribir_encabezado(Salida, Carne),
+    forall(member(Titulo-Meta, Secciones),
+           ( filas_seccion(Meta, Filas),
+             escribir_seccion(Salida, Titulo, Filas) )),
+    format(Salida, "~n~`=t~70|~n", []),
+    format(Salida, "Todas las conclusiones de este reporte fueron deducidas por~n", []),
+    format(Salida, "reglas de Prolog a partir del plan de estudios y del historial.~n", []).
+
+escribir_encabezado(Salida, Carne) :-
+    estudiante(Carne, Nombre),
+    texto_plano(Nombre, NombrePlano),
+    get_time(Ahora),
+    format_time(atom(Fecha), "%Y-%m-%d %H:%M", Ahora),
+    format(Salida, "~`=t~70|~n", []),
+    format(Salida, "CONSEJERO ACADEMICO INTELIGENTE - Reporte de planificacion~n", []),
+    format(Salida, "Universidad Nacional - Ingenieria en Sistemas de Informacion~n", []),
+    format(Salida, "Estudiante: ~w (~w)~n", [NombrePlano, Carne]),
+    format(Salida, "Generado:   ~w~n", [Fecha]),
+    format(Salida, "~`=t~70|~n", []).
+
+escribir_seccion(Salida, Titulo, Filas) :-
+    format(Salida, "~n--- ~w ---~n", [Titulo]),
+    forall(member(Fila, Filas), escribir_fila(Salida, Fila)).
+
+% Filas de 2 columnas como "Etiqueta: valor"; las demas separadas por " | ".
+escribir_fila(Salida, [Etiqueta, Valor]) :- !,
+    format(Salida, "~w: ~w~n", [Etiqueta, Valor]).
+escribir_fila(Salida, Columnas) :-
+    atomic_list_concat(Columnas, ' | ', Linea),
+    format(Salida, "  ~w~n", [Linea]).
 
 % =====================================================================
 % 11-12. Sesion y base de conocimientos

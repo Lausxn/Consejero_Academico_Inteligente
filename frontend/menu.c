@@ -468,6 +468,21 @@ static void opcion_avance(void)
 }
 
 /* ================================================================== */
+/* 10. Reporte de planificacion                                        */
+/* ================================================================== */
+
+static void opcion_reporte(void)
+{
+    char carne[TAM_CARNE];
+    const char *argumentos[] = { carne };
+
+    interfaz_titulo("Generar reporte de planificacion");
+    if (pedir_carne_registrado(carne)) {
+        ejecutar_y_mostrar("consulta_reporte", argumentos, 1, NULL, 0, "");
+    }
+}
+
+/* ================================================================== */
 /* 11-12. Sesion y base de conocimientos                               */
 /* ================================================================== */
 
@@ -505,6 +520,7 @@ static const OpcionMenu MENU_PRINCIPAL[] = {
     { 7,  "Detectar choques de horario",           opcion_choques },
     { 8,  "Recomendar combinaciones de cursos",    opcion_recomendar },
     { 9,  "Avance de carrera",                     opcion_avance },
+    { 10, "Generar reporte de planificacion",      opcion_reporte },
     { 11, "Guardar / cargar sesion",               opcion_sesion },
     { 12, "Recargar base de conocimientos",        opcion_recargar },
     { OPCION_SALIR, "Salir",                       NULL }

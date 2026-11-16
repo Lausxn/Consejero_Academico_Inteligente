@@ -1,0 +1,84 @@
+======================================================================
+CONSEJERO ACADEMICO INTELIGENTE - Reporte de planificacion
+Universidad Nacional - Ingenieria en Sistemas de Informacion
+Estudiante: Lausen Paniagua Arias (208490835)
+Generado:   2026-11-15 20:35
+======================================================================
+
+--- Avance de carrera ---
+Estudiante: Lausen Paniagua Arias (208490835)
+Creditos aprobados: 37 de 140
+Avance de carrera: 26.4 %
+Nivel actual: 2
+Diplomado: No cumple: faltan 51 credito(s) y 15 curso(s) fijos: EG1, EG2, EG3, EG4, LIX412, EIF205, EIF206, EIF207, EIF404, MAT006, EIF208, EIF209, EIF210, EIF211, EIF212.
+Bachillerato: No cumple: faltan 103 credito(s) y 26 curso(s) fijos: EG1, EG2, EG3, EG4, LIX412, EIF205, EIF206, EIF207, EIF404, MAT006, EIF208, EIF209, EIF210, EIF211, EIF212, EIF400, EIF401, EIF402, EIF407, EIF412, EIF406, EIF411, EIF413, EIF408, EIF409, EIF410.
+Optativas: No cumple: 0 de 4 aprobadas (0 disciplinarias, minimo 2).
+
+--- Cursos aprobados ---
+  EIF200 | Fundamentos de Informatica | 3 | Nivel 1 Ciclo 1 | ninguno
+  LIX410 | Ingles Integrado I | 4 | Nivel 1 Ciclo 1 | ninguno
+  MAT030 | Matematica para Informatica | 4 | Nivel 1 Ciclo 1 | ninguno
+  EIF201 | Programacion I | 4 | Nivel 1 Ciclo 2 | EIF200, MAT030
+  LIX411 | Ingles Integrado II | 4 | Nivel 1 Ciclo 2 | LIX410
+  MAT002 | Calculo I | 4 | Nivel 1 Ciclo 2 | MAT030
+  EIF202 | Soporte Tecnico | 3 | Nivel 2 Ciclo 1 | EIF200
+  EIF203 | Estructuras Discretas para Informatica | 3 | Nivel 2 Ciclo 1 | EIF200, MAT030
+  EIF204 | Programacion II | 4 | Nivel 2 Ciclo 1 | EIF201
+  MAT005 | Algebra Lineal | 4 | Nivel 2 Ciclo 1 | MAT002
+
+--- Cursos disponibles (en orden de prioridad) ---
+  EG1 | Estudios Generales I | 3 | No tiene requisitos (ingreso a carrera).
+  EG2 | Estudios Generales II | 3 | No tiene requisitos (ingreso a carrera).
+  EG3 | Estudios Generales III | 3 | No tiene requisitos (ingreso a carrera).
+  EG4 | Estudios Generales IV | 3 | No tiene requisitos (ingreso a carrera).
+  EIF206 | Programacion III | 4 | Tiene aprobados todos sus requisitos: EIF204, MAT002.
+  EIF207 | Estructuras de Datos | 4 | Tiene aprobados todos sus requisitos: EIF203, EIF204.
+  EIF205 | Arquitectura de Computadoras | 3 | Tiene aprobados todos sus requisitos: EIF201, EIF202.
+  MAT006 | Probabilidad y Estadistica para Informatica | 3 | Tiene aprobados todos sus requisitos: MAT002, EIF203.
+  EIF404 | La Organizacion y su Entorno | 3 | Tiene aprobados todos sus requisitos: EIF201.
+  LIX412 | Ingles Integrado III | 4 | Tiene aprobados todos sus requisitos: LIX411.
+  EIF102O | Introduccion al Analisis de Datos para Otras Carreras | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF427O | Robotica | 3 | Tiene aprobados todos sus requisitos: EIF204.
+  EIF429O | Introduccion a la Creacion de Empresas | 3 | No tiene requisitos (ingreso a carrera).
+  EIF430O | Las TICs en el Ambito Juridico de Costa Rica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF437O | Propiedad Intelectual y su Aplicacion Practica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF438O | Gobierno Electronico y su Regulacion en Costa Rica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF441O | Soporte Tecnico Avanzado | 3 | Tiene aprobados todos sus requisitos: EIF202.
+  EIF442O | Entornos de Programacion para Videojuegos | 3 | Tiene aprobados todos sus requisitos: EIF204, MAT002. No se oferta este ciclo (sin horario asignado).
+  EIF443O | Diseno y Programacion de Videojuegos en 3D | 3 | Tiene aprobados todos sus requisitos: EIF204, MAT002. No se oferta este ciclo (sin horario asignado).
+  EIF444O | Introduccion a la Innovacion Tecnologica | 3 | No tiene requisitos (ingreso a carrera).
+  EIG417O | Liderazgo y Organizaciones | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIG418O | La Organizacion y su Entorno (optativo) | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+
+--- Recomendacion para el proximo ciclo (tope 18 creditos) ---
+Opcion 1 (16 cr): EG1 G1 miercoles 7:00-10:00; EG2 G1 jueves 7:00-10:00; EG3 G1 miercoles 10:00-13:00; EG4 G1 jueves 10:00-13:00; EIF206 G1 martes 16:00-19:00
+Opcion 2 (16 cr): EG1 G1 miercoles 7:00-10:00; EG2 G1 jueves 7:00-10:00; EG3 G1 miercoles 10:00-13:00; EG4 G1 jueves 10:00-13:00; EIF207 G1 martes 16:00-19:00
+Opcion 3 (18 cr): EG1 G1 miercoles 7:00-10:00; EG2 G1 jueves 7:00-10:00; EG3 G1 miercoles 10:00-13:00; EG4 G1 jueves 10:00-13:00; EIF205 G1 lunes 16:00-19:00; MAT006 G1 jueves 16:00-19:00
+Por que EG1 (opcion 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG2 (opcion 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG3 (opcion 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG4 (opcion 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EIF206 (opcion 1): Desbloquea 24 curso(s) en total (directamente: EIF209, EIF210, EIF211, EIF400, EIF412, EIF422O, EIF424O, EIF425O, EIF426O, EIF428O).
+
+--- Recomendacion para el proximo anio (tope 36 creditos) ---
+Ciclo 1 (16 cr): EG1 G1 miercoles 7:00-10:00; EG2 G1 jueves 7:00-10:00; EG3 G1 miercoles 10:00-13:00; EG4 G1 jueves 10:00-13:00; EIF206 G1 martes 16:00-19:00
+Ciclo 2 (17 cr): EIF207 G1 martes 16:00-19:00; EIF205 G1 lunes 16:00-19:00; MAT006 G1 jueves 16:00-19:00; EIF404 G1 miercoles 16:00-19:00; LIX412 G1 viernes 13:00-16:00
+Total anual: 33 de 36 creditos permitidos
+Por que EG1 (ciclo 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG2 (ciclo 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG3 (ciclo 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EG4 (ciclo 1): Esta atrasado: es de nivel 1 y ya cursa nivel 2.
+Por que EIF206 (ciclo 1): Desbloquea 24 curso(s) en total (directamente: EIF209, EIF210, EIF211, EIF400, EIF412, EIF422O, EIF424O, EIF425O, EIF426O, EIF428O).
+
+--- Plan hacia el Bachillerato (etapas minimas) ---
+Etapa 1: EG1, EG2, EG3, EG4, EIF205, EIF206, EIF207, EIF404, LIX412, MAT006 (33 creditos)
+Etapa 2: EIF208, EIF209, EIF210, EIF211, EIF212, EIF400, EIF407, EIF412, EIF413 (31 creditos)
+Etapa 3: EIF401, EIF402, EIF411 (12 creditos)
+Etapa 4: EIF406, EIF408, EIF409, EIF410 (15 creditos)
+Minimo de etapas (sin tope): 4
+Ciclos estimados (tope 18 cr): 6
+Optativas: Faltan 4 optativa(s) (al menos 2 disciplinarias en total); se pueden llevar en las etapas.
+
+======================================================================
+Todas las conclusiones de este reporte fueron deducidas por
+reglas de Prolog a partir del plan de estudios y del historial.

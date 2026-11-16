@@ -13,6 +13,8 @@
     ruta_hacia/3,
     cursos_necesarios/3,
     plan_por_etapas/3,
+    plan_hacia_bachillerato/2,
+    ciclos_estimados/3,
     % --- desbloqueo y prioridad
     cursos_que_desbloquea/2,
     cantidad_desbloquea/2,
@@ -133,6 +135,16 @@ plan_por_etapas(Est, Meta, Etapas) :-
     cursos_aprobados(Est, Aprobados),
     etapas(Necesarios, Aprobados, Etapas).
 
+%!  plan_hacia_bachillerato(+Est, -Etapas)
+%   Igual que plan_por_etapas/3, pero la "meta" son todos los cursos
+%   fijos del Bachillerato que faltan (las optativas se informan aparte).
+plan_hacia_bachillerato(Est, Etapas) :-
+    faltantes_bachillerato(Est, Faltantes),
+    cierre(Est, Faltantes, [], Encontrados),
+    sort(Encontrados, Necesarios),
+    cursos_aprobados(Est, Aprobados),
+    etapas(Necesarios, Aprobados, Etapas).
+
 %   - Caso base: no quedan pendientes.
 %   - Caso recursivo: la etapa son los pendientes listos; se "aprueban"
 %     en simulacion y se sigue con el resto.
@@ -145,6 +157,18 @@ etapas(Pendientes, Aprobados, [Etapa|Resto]) :-
     subtract(Pendientes, Etapa, Restantes),
     append(Aprobados, Etapa, NuevosAprobados),
     etapas(Restantes, NuevosAprobados, Resto).
+
+%!  ciclos_estimados(+Etapas, +Tope, -Ciclos)
+%   RECURSIVA sobre la lista de etapas. Cada etapa necesita
+%   ceil(creditos / Tope) ciclos para no superar el tope por ciclo.
+%   - Caso base: sin etapas, 0 ciclos.
+%   - Caso recursivo: ciclos de la primera etapa + los del resto.
+ciclos_estimados([], _, 0).
+ciclos_estimados([Etapa|Resto], Tope, Ciclos) :-
+    suma_creditos(Etapa, Cr),
+    CiclosEtapa is max(1, ceiling(Cr / Tope)),
+    ciclos_estimados(Resto, Tope, CiclosResto),
+    Ciclos is CiclosEtapa + CiclosResto.
 
 % Un curso esta listo si tiene sus requisitos aprobados y sus
 % correquisitos pendientes tambien estan listos (van juntos).

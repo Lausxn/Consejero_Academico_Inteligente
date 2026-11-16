@@ -1,0 +1,109 @@
+======================================================================
+CONSEJERO ACADEMICO INTELIGENTE - Reporte de planificacion
+Universidad Nacional - Ingenieria en Sistemas de Informacion
+Estudiante: Carlos Vargas Solis (111110002)
+Generado:   2026-11-15 20:34
+======================================================================
+
+--- Avance de carrera ---
+Estudiante: Carlos Vargas Solis (111110002)
+Creditos aprobados: 88 de 140
+Avance de carrera: 62.9 %
+Nivel actual: 3
+Diplomado: CUMPLE (88 creditos, minimo 88).
+Bachillerato: No cumple: faltan 52 credito(s) y 11 curso(s) fijos: EIF400, EIF401, EIF402, EIF407, EIF412, EIF406, EIF411, EIF413, EIF408, EIF409, EIF410.
+Optativas: No cumple: 0 de 4 aprobadas (0 disciplinarias, minimo 2).
+
+--- Cursos aprobados ---
+  EG1 | Estudios Generales I | 3 | Nivel 1 Ciclo 1 | ninguno
+  EG2 | Estudios Generales II | 3 | Nivel 1 Ciclo 1 | ninguno
+  EIF200 | Fundamentos de Informatica | 3 | Nivel 1 Ciclo 1 | ninguno
+  LIX410 | Ingles Integrado I | 4 | Nivel 1 Ciclo 1 | ninguno
+  MAT030 | Matematica para Informatica | 4 | Nivel 1 Ciclo 1 | ninguno
+  EG3 | Estudios Generales III | 3 | Nivel 1 Ciclo 2 | ninguno
+  EG4 | Estudios Generales IV | 3 | Nivel 1 Ciclo 2 | ninguno
+  EIF201 | Programacion I | 4 | Nivel 1 Ciclo 2 | EIF200, MAT030
+  LIX411 | Ingles Integrado II | 4 | Nivel 1 Ciclo 2 | LIX410
+  MAT002 | Calculo I | 4 | Nivel 1 Ciclo 2 | MAT030
+  EIF202 | Soporte Tecnico | 3 | Nivel 2 Ciclo 1 | EIF200
+  EIF203 | Estructuras Discretas para Informatica | 3 | Nivel 2 Ciclo 1 | EIF200, MAT030
+  EIF204 | Programacion II | 4 | Nivel 2 Ciclo 1 | EIF201
+  LIX412 | Ingles Integrado III | 4 | Nivel 2 Ciclo 1 | LIX411
+  MAT005 | Algebra Lineal | 4 | Nivel 2 Ciclo 1 | MAT002
+  EIF205 | Arquitectura de Computadoras | 3 | Nivel 2 Ciclo 2 | EIF201, EIF202
+  EIF206 | Programacion III | 4 | Nivel 2 Ciclo 2 | EIF204, MAT002
+  EIF207 | Estructuras de Datos | 4 | Nivel 2 Ciclo 2 | EIF203, EIF204
+  EIF404 | La Organizacion y su Entorno | 3 | Nivel 2 Ciclo 2 | EIF201
+  MAT006 | Probabilidad y Estadistica para Informatica | 3 | Nivel 2 Ciclo 2 | MAT002, EIF203
+  EIF208 | Comunicaciones y Redes de Computadores | 3 | Nivel 3 Ciclo 1 | EIF205
+  EIF209 | Programacion IV | 4 | Nivel 3 Ciclo 1 | EIF206
+  EIF210 | Ingenieria de Sistemas I | 4 | Nivel 3 Ciclo 1 | EIF206
+  EIF211 | Diseno e Implementacion de Bases de Datos | 4 | Nivel 3 Ciclo 1 | EIF206, EIF207
+  EIF212 | Sistemas Operativos | 3 | Nivel 3 Ciclo 1 | EIF204, EIF205
+
+--- Cursos disponibles (en orden de prioridad) ---
+  EIF402 | Administracion de Bases de Datos | 4 | Tiene aprobados todos sus requisitos: EIF212, EIF211. Debe matricularse junto con su correquisito EIF401.
+  EIF401 | Ingenieria de Sistemas II | 4 | Tiene aprobados todos sus requisitos: EIF210. Debe matricularse junto con su correquisito EIF402.
+  EIF400 | Paradigmas de Programacion | 4 | Tiene aprobados todos sus requisitos: EIF206.
+  EIF407 | Liderazgo y Organizacion | 3 | Tiene aprobados todos sus requisitos: EIF404.
+  EIF412 | Investigacion de Operaciones y sus Aplicaciones | 3 | Tiene aprobados todos sus requisitos: EIF206, MAT005, MAT006.
+  EIF411 | Diseno y Programacion de Plataformas Moviles | 4 | Tiene aprobados todos sus requisitos: EIF209.
+  EIF413 | Metodos de Investigacion Cientifica en Informatica | 3 | Tiene aprobados todos sus requisitos: MAT006.
+  EIF425O | Diseno de Ambientes Multimediales | 3 | Tiene aprobados todos sus requisitos: EIF204, EIF206. No se oferta este ciclo (sin horario asignado).
+  EIF100O | Dispositivos para Comunicaciones de Datos | 3 | Tiene aprobados todos sus requisitos: EIF208. No se oferta este ciclo (sin horario asignado).
+  EIF101O | Redes Avanzadas I | 3 | Tiene aprobados todos sus requisitos: EIF208. No se oferta este ciclo (sin horario asignado).
+  EIF102O | Introduccion al Analisis de Datos para Otras Carreras | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF420O | Inteligencia Artificial | 3 | Tiene aprobados todos sus requisitos: EIF207.
+  EIF421O | Analisis de Algoritmos | 3 | Tiene aprobados todos sus requisitos: EIF207, MAT002.
+  EIF422O | Diseno de Interfaces de Usuario | 3 | Tiene aprobados todos sus requisitos: EIF206.
+  EIF423O | Introduccion a la Programacion de Dispositivos Moviles | 3 | Tiene aprobados todos sus requisitos: EIF209. No se oferta este ciclo (sin horario asignado).
+  EIF424O | Desarrollo de Aplicaciones Educativas | 3 | Tiene aprobados todos sus requisitos: EIF204, EIF206. No se oferta este ciclo (sin horario asignado).
+  EIF426O | Diseno de Ambientes de Aprendizaje | 3 | Tiene aprobados todos sus requisitos: EIF204, EIF206. No se oferta este ciclo (sin horario asignado).
+  EIF427O | Robotica | 3 | Tiene aprobados todos sus requisitos: EIF204.
+  EIF428O | Fundamentos de Programacion Web | 3 | Tiene aprobados todos sus requisitos: EIF206, EIF211.
+  EIF429O | Introduccion a la Creacion de Empresas | 3 | No tiene requisitos (ingreso a carrera).
+  EIF430O | Las TICs en el Ambito Juridico de Costa Rica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF432O | Introduccion a la Programacion Paralela en Arquitecturas Multinucleo | 3 | Tiene aprobados todos sus requisitos: EIF207, EIF212. No se oferta este ciclo (sin horario asignado).
+  EIF433O | Contexto, Desarrollo y Aplicacion de Software Libre y de Codigo Abierto | 3 | Tiene aprobados todos sus requisitos: EIF212, EIF211. No se oferta este ciclo (sin horario asignado).
+  EIF436O | Graficos por Computadora | 3 | Tiene aprobados todos sus requisitos: EIF207, MAT005. No se oferta este ciclo (sin horario asignado).
+  EIF437O | Propiedad Intelectual y su Aplicacion Practica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF438O | Gobierno Electronico y su Regulacion en Costa Rica | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIF439O | Uso Estrategico del Comercio Electronico | 3 | Tiene aprobados todos sus requisitos: EIF209, EIF211. No se oferta este ciclo (sin horario asignado).
+  EIF440O | Seguridad Informatica | 3 | Tiene aprobados todos sus requisitos: EIF208, EIF212.
+  EIF441O | Soporte Tecnico Avanzado | 3 | Tiene aprobados todos sus requisitos: EIF202.
+  EIF442O | Entornos de Programacion para Videojuegos | 3 | Tiene aprobados todos sus requisitos: EIF204, MAT002. No se oferta este ciclo (sin horario asignado).
+  EIF443O | Diseno y Programacion de Videojuegos en 3D | 3 | Tiene aprobados todos sus requisitos: EIF204, MAT002. No se oferta este ciclo (sin horario asignado).
+  EIF444O | Introduccion a la Innovacion Tecnologica | 3 | No tiene requisitos (ingreso a carrera).
+  EIG417O | Liderazgo y Organizaciones | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+  EIG418O | La Organizacion y su Entorno (optativo) | 3 | No tiene requisitos (ingreso a carrera). No se oferta este ciclo (sin horario asignado).
+
+--- Recomendacion para el proximo ciclo (tope 18 creditos) ---
+Opcion 1 (18 cr): EIF402 G1 miercoles 13:00-16:00; EIF401 G1 martes 13:00-16:00; EIF400 G1 lunes 13:00-16:00; EIF407 G1 jueves 13:00-16:00; EIF413 G1 miercoles 16:00-19:00
+Opcion 2 (18 cr): EIF402 G1 miercoles 13:00-16:00; EIF401 G1 martes 13:00-16:00; EIF400 G1 lunes 13:00-16:00; EIF407 G1 jueves 13:00-16:00; EIF420O G1 jueves 16:00-19:00
+Opcion 3 (18 cr): EIF402 G1 miercoles 13:00-16:00; EIF401 G1 martes 13:00-16:00; EIF400 G1 lunes 13:00-16:00; EIF407 G1 jueves 13:00-16:00; EIF421O G1 viernes 13:00-16:00
+Por que EIF402 (opcion 1): Desbloquea 5 curso(s) en total (directamente: EIF408, EIF409, EIF431O, EIF434O). Debe matricularse junto con su correquisito EIF401.
+Por que EIF401 (opcion 1): Desbloquea 4 curso(s) en total (directamente: EIF406, EIF408, EIF409, EIF410). Debe matricularse junto con su correquisito EIF402.
+Por que EIF400 (opcion 1): Corresponde al nivel 3, ciclo 2 del plan.
+Por que EIF407 (opcion 1): Corresponde al nivel 3, ciclo 2 del plan.
+Por que EIF413 (opcion 1): Corresponde al nivel 4, ciclo 1 del plan.
+
+--- Recomendacion para el proximo anio (tope 36 creditos) ---
+Ciclo 1 (18 cr): EIF402 G1 miercoles 13:00-16:00; EIF401 G1 martes 13:00-16:00; EIF400 G1 lunes 13:00-16:00; EIF407 G1 jueves 13:00-16:00; EIF413 G1 miercoles 16:00-19:00
+Ciclo 2 (18 cr): EIF412 G1 miercoles 13:00-16:00; EIF406 G1 lunes 16:00-19:00; EIF411 G1 martes 16:00-19:00; EIF408 G1 lunes 10:00-13:00; EIF410 G1 miercoles 10:00-13:00
+Total anual: 36 de 36 creditos permitidos
+Por que EIF402 (ciclo 1): Desbloquea 5 curso(s) en total (directamente: EIF408, EIF409, EIF431O, EIF434O). Debe matricularse junto con su correquisito EIF401.
+Por que EIF401 (ciclo 1): Desbloquea 4 curso(s) en total (directamente: EIF406, EIF408, EIF409, EIF410). Debe matricularse junto con su correquisito EIF402.
+Por que EIF400 (ciclo 1): Corresponde al nivel 3, ciclo 2 del plan.
+Por que EIF407 (ciclo 1): Corresponde al nivel 3, ciclo 2 del plan.
+Por que EIF413 (ciclo 1): Corresponde al nivel 4, ciclo 1 del plan.
+
+--- Plan hacia el Bachillerato (etapas minimas) ---
+Etapa 1: EIF400, EIF401, EIF402, EIF407, EIF411, EIF412, EIF413 (25 creditos)
+Etapa 2: EIF406, EIF408, EIF409, EIF410 (15 creditos)
+Minimo de etapas (sin tope): 2
+Ciclos estimados (tope 18 cr): 3
+Optativas: Faltan 4 optativa(s) (al menos 2 disciplinarias en total); se pueden llevar en las etapas.
+
+======================================================================
+Todas las conclusiones de este reporte fueron deducidas por
+reglas de Prolog a partir del plan de estudios y del historial.
